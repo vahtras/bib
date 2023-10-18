@@ -86,13 +86,13 @@ def import_csv(csv_stream=None, save=False):
     if isinstance(csv_stream, str):
         csv_stream = open(csv_stream)
     books = []
-    for rec in csv.DictReader(csv_stream, delimiter=";"):
-        names = rec['author'].split()
-        first = ' '.join(names[:-1])
-        last = names[-1]
-        author = Author(last=last, first=first)
-        book = Book(title=rec['title'], authors=[author])
-        books.append(book)
+    for rec in csv.DictReader(csv_stream, delimiter="\t"):
+        authors = [au.strip() for au in rec['Authors'].split(';')]
+        book_authors = []
+        for author in authors:
+            last, first = author.split(',')
+            book_authors.append(Author(last=last.strip(), first=first.strip()))
+        books.append(Book(title=rec["Title"], authors=book_authors))
 
     if not save:
         save = input(f"Save {len(books)} books? y/[n]") == "y"

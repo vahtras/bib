@@ -58,8 +58,8 @@ def test_titles(mongodb):
 
 def test_import_csv():
     finp = io.StringIO(
-"""title;author
-Purge;Sofi Oksanen
+"""Title\tAuthors
+Purge\tOksanen, Sofi
 """
     )
     books = import_csv(finp, save=True)
