@@ -57,7 +57,14 @@ def add_authors():
             last, first = author.split(',')
             last = last.strip()
             first = first.strip()
-            authors.append(Author(first=first, last=last))
+
+            breakpoint()
+            if old := Author.objects(first=first, last=last).first():
+                authors.append(old)
+            else:
+                new = Author(first=first, last=last)
+                new.save()
+                authors.append(new)
     except EOFError:
         print(len(authors))
 
