@@ -12,4 +12,5 @@ class Book(mongoengine.Document):
     title = mongoengine.StringField(required=True)
     authors = mongoengine.EmbeddedDocumentListField(Author)
 
-
+    def __repr__(self):
+        return f'Book(title="{self.title}")'

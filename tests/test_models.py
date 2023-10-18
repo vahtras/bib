@@ -1,8 +1,11 @@
+import io
+
 import mongoengine
 import mongomock
 import pytest
 
 from models import Author, Book
+from program import import_csv
 
 
 def test_create_book_with_only_title():
@@ -59,3 +62,14 @@ def test_titles(mongodb):
     assert 'titles' in mongodb.list_collection_names()
     one = mongodb.titles.find_one({'title': 'One Title'})
     assert one['title'] == "One Title"
+
+def test_import_csv():
+    finp = io.StringIO(
+"""title;author
+Purge;Sofi Oksanen
+"""
+    )
+    books = import_csv(finp)
+    assert books[0].title == 'Purge'
+    assert books[0].authors[0].last == 'Oksanen'
+    assert books[0].authors[0].first == 'Sofi'

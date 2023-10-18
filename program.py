@@ -1,9 +1,12 @@
+import csv
+
 import mongoengine
 from models import Author, Book
 
 def main():
     mongoengine.register_connection(alias='core', name='bib')
     print("Welcome to my bibliography")
+    breakpoint()
 
     try:
         while True:
@@ -21,6 +24,7 @@ def add_book():
         print(f"\nCreated: '{book.title}' by {join_authors(authors)}")
     else:
         print(f"\nCreated: '{book.title}'")
+    book.save()
 
 def add_authors():
     """
@@ -49,6 +53,17 @@ def join_authors(authors):
         return str(authors[0])
     joined = ", ".join(str(a) for a in authors[:-1]) + f" and {authors[-1]}"
     return joined
+
+def import_csv(csv_stream):
+    books = []
+    for rec in csv.DictReader(csv_stream, delimiter=";"):
+        names = rec['author'].split()
+        first = ' '.join(names[:-1])
+        last = names[-1]
+        author = Author(last=last, first=first)
+        book = Book(title=rec['title'], authors=[author])
+        books.append(book)
+    return books
 
 if __name__ == "__main__":
      main()
