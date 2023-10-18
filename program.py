@@ -58,7 +58,6 @@ def add_authors():
             last = last.strip()
             first = first.strip()
 
-            breakpoint()
             if old := Author.objects(first=first, last=last).first():
                 authors.append(old)
             else:
