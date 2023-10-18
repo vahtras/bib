@@ -57,3 +57,22 @@ def test_add_two_authors():
 )
 def test_join_authors(inputs, expected):
     assert program.join_authors(inputs) == expected
+
+@pytest.mark.parametrize(
+    'search_title, expected_title, matches',
+    [
+        ('no match', "dummy", 0),
+        ('kejsaren', "Kejsaren av Portugallien", 1),
+    ]
+)
+def test_find_book(search_title, expected_title, matches, client):
+    book = models.Book(title=expected_title)
+    book.save()
+
+    with patch('program.input') as mock_input:
+        mock_input.side_effect = [search_title, EOFError]
+        books = program.find_book()
+
+    assert len(books) == matches
+    for book in books:
+        book.delete()
