@@ -12,7 +12,7 @@ def test_add_no_authors():
     assert authors == []
 
 
-def test_add_one_authors():
+def test_add_one_authors(client):
     with patch('program.input') as mock_input:
         mock_input.side_effect = ["foo, bar", EOFError]
         authors = program.add_authors()
@@ -22,7 +22,7 @@ def test_add_one_authors():
     assert authors[0].first == 'bar'
 
 
-def test_add_two_authors():
+def test_add_two_authors(client):
     with patch('program.input') as mock_input:
         mock_input.side_effect = ["foo, bar", "baz, boo", EOFError]
         authors = program.add_authors()

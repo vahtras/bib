@@ -90,7 +90,10 @@ def import_csv(csv_stream=None, save=False):
         authors = [au.strip() for au in rec['Authors'].split(';')]
         book_authors = []
         for author in authors:
-            last, first = author.split(',')
+            try:
+                last, first = author.split(',')
+            except ValueError:
+                last = author
             book_authors.append(Author(last=last.strip(), first=first.strip()))
         books.append(Book(title=rec["Title"], authors=book_authors))
 

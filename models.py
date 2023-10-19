@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, ListField, ReferenceField
+from mongoengine import Document, StringField, ListField, ReferenceField, fields
 
 class Author(Document):
     first = StringField(required=True)
@@ -15,6 +15,7 @@ class Author(Document):
 class Book(Document):
     title = StringField(required=True)
     authors = ListField(ReferenceField(Author))
+    image = fields.ImageField(thumbnail_size=(100, 70, False))
     meta = {'collection': 'books'}
 
     def __repr__(self):
