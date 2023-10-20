@@ -4,7 +4,7 @@ import mongoengine
 from models import Author, Book
 
 def main():
-    mongoengine.register_connection(alias='default', name='kindle')
+    mongoengine.register_connection(alias='default', name='bib')
     print("Welcome to my bibliography")
 
     menu = "\nCommands:\n add [a]\n find [s]\n list[l]\n import [i]\n> "
@@ -13,6 +13,8 @@ def main():
             action = input(menu)
             if action == 'a':
                 add_book()
+            if action == 'f':
+                find_book(first=True)
             if action == 's':
                 find_book()
             if action == 'l':
@@ -32,13 +34,19 @@ def add_book():
         print(f"\nCreated: '{book.title}'")
     book.save()
 
-def find_book():
-    search_string = input("Title:")
-    books = Book.objects(title__icontains=search_string)
-    for book in books:
-        print(book)
-    print(f"\n{len(books)} found mathing {search_string}")
-    return books
+def find_book(search_string=None, first=False):
+    if search_string is None:
+        search_string = input("Title:")
+    if first:
+        book = Book.objects(title__icontains=search_string).first()
+        print(book.id)
+        return book
+    else:
+        books = Book.objects(title__icontains=search_string)
+        for book in books:
+            print(book)
+        print(f"\n{len(books)} found mathing {search_string}")
+        return books
 
 def list_books():
     print(f"Listing of {Book._collection}")

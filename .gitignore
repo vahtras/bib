@@ -1,3 +1,6 @@
 .envrc
 *.pyc
 .python-*
+*.ipynb*
+csvs
+img
