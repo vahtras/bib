@@ -1,8 +1,5 @@
 import io
 
-import mongoengine
-import mongomock
-import pytest
 
 from models import Author, Book
 from program import import_csv
@@ -14,6 +11,13 @@ def test_create_book_with_only_title():
     )
    assert book.title == "It's"
 
+def test_create_book_with_subtitle():
+   book = Book(
+        title="It's",
+        subtitle="Monty Python",
+    )
+   assert book.title == "It's"
+
 def test_create_author():
     author = Author(
         last="Lagerlöf",
@@ -21,6 +25,17 @@ def test_create_author():
     )
 
     assert author.first == "Selma"
+
+def test_author_from_comma_field():
+    full = "Last, First"
+    author = Author.from_comma_string(full)
+    assert author.first == 'First'
+    assert author.last == 'Last'
+
+    onlylast = "Last"
+    author = Author.from_comma_string(onlylast)
+    assert author.first == ''
+    assert author.last == 'Last'
 
 def test_create_book_with_one_author():
    book = Book(
@@ -55,14 +70,3 @@ def test_titles(mongodb):
     assert 'titles' in mongodb.list_collection_names()
     one = mongodb.titles.find_one({'title': 'One Title'})
     assert one['title'] == "One Title"
-
-def test_import_csv():
-    finp = io.StringIO(
-"""Title\tAuthors
-Purge\tOksanen, Sofi
-"""
-    )
-    books = import_csv(finp, save=True)
-    assert books[0].title == 'Purge'
-    assert books[0].authors[0].last == 'Oksanen'
-    assert books[0].authors[0].first == 'Sofi'

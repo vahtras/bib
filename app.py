@@ -1,3 +1,4 @@
+import base64
 import flask
 import mongoengine
 
@@ -8,7 +9,7 @@ app = flask.Flask(__name__)
 @app.route('/')
 def index():
     books = Book.objects().order_by('authors')
-    return flask.render_template('index.html', books=books)
+    return flask.render_template('index.html', books=books, encode=base64.b64encode)
 
 
 if __name__ == "__main__":

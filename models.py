@@ -11,9 +11,19 @@ class Author(Document):
     def __str__(self):
         return f"{self.first} {self.last}"
 
+    @staticmethod
+    def from_comma_string(cstr):
+        try:
+            last, first = cstr.split(',')
+        except ValueError:
+            last = cstr.strip()
+            first = ""
+        return Author(last=last.strip(), first=first.strip())
+
 
 class Book(Document):
     title = StringField(required=True)
+    subtitle = StringField()
     authors = ListField(ReferenceField(Author))
     image = fields.ImageField(thumbnail_size=(100, 70, False))
     meta = {'collection': 'books'}

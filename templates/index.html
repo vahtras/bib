@@ -1,7 +1,11 @@
 <h1>Books</h1>
 
-<ul>
 {% for book in books %}
-<li>{{ book.authors.0 }}: <i>{{ book.title }}</i></li>
+<div>
+<hr>
+    {% if book.image %}
+    <img src="data:image/jpeg;base64,{{ encode(book.image.thumbnail.read()).decode() }}">
+    {% endif %}
+    {{ book.authors.0 }}: <i>{{ book.title }}</i> 
+</div>
 {% endfor %}
-</ul>
