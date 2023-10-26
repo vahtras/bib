@@ -29,7 +29,8 @@ class Book(Document):
     meta = {'collection': 'books'}
 
     def __repr__(self):
-        return f'Book(title="{self.title}")'
+        str_subtitle = f' subtitle="{self.subtitle}"' if self.subtitle else ''
+        return f'Book(title="{self.title}"{str_subtitle})'
 
     def __str__(self):
         if len(self.authors) == 0:
