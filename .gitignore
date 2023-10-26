@@ -4,4 +4,5 @@
 *.ipynb*
 csvs
 img
-*.xls
+*.xls*
+*.txt
