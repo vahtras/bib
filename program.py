@@ -5,6 +5,9 @@ from models import Author, Book
 
 class Bib():
 
+    def connect(self, name):
+        self.connection = mongoengine.register_connection(alias='default', name=name)
+
     def add_authors(self):
         """
         Read from input author names in format "last, first"
@@ -113,10 +116,11 @@ class Bib():
 
 def main():
     bib = Bib()
-    bib.connection = mongoengine.register_connection(alias='default', name='bib')
+    bib.connect('bib')
+
     print("Welcome to my bibliography")
 
-    menu = "\nCommands:\n add [a]\n find [s]\n list[l]\n import [i]\n> "
+    menu = "\nCommands:\n add [a]\n find-one [f]\n find [s]\n list[l]\n import [i]\n> "
     result = None
     try:
         while True:
