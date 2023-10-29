@@ -1,6 +1,13 @@
-from mongoengine import Document, StringField, ListField, ReferenceField, fields
+from mongoengine import (
+    Document,
+    EmbeddedDocument,
+    EmbeddedDocumentField,
+    ListField,
+    StringField,
+    fields,
+)
 
-class Author(Document):
+class Author(EmbeddedDocument):
     first = StringField(required=True)
     last = StringField(required=True)
     meta = {'collection': 'authors'}
@@ -24,7 +31,7 @@ class Author(Document):
 class Book(Document):
     title = StringField(required=True)
     subtitle = StringField()
-    authors = ListField(ReferenceField(Author))
+    authors = ListField(EmbeddedDocumentField(Author))
     image = fields.ImageField(thumbnail_size=(100, 70, False))
     meta = {'collection': 'books'}
 

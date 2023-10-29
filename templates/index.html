@@ -6,6 +6,6 @@
     {% if book.image %}
     <img src="data:image/jpeg;base64,{{ encode(book.image.thumbnail.read()).decode() }}">
     {% endif %}
-    {{ book.authors.0 }}: <i>{{ book.title }}</i> 
+    {{ book.authors.0.first }} {{ book.authors.0.last }}: <i>{{ book.title }}</i> 
 </div>
 {% endfor %}

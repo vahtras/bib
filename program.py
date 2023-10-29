@@ -98,12 +98,7 @@ def authors_field_to_author_list(authors_field: str) -> list[Author]:
         first = first.strip()
         last = last.strip()
 
-        if old := Author.objects(first=first, last=last):
-            authors.append(old.first())
-        else:
-            new = Author(first=first, last=last)
-            new.save()
-            authors.append(new)
+        authors.append(Author(first=first, last=last))
     return authors
 
 def import_csv(csv_stream=None, save=False, field_separator=',', author_separator=';'):
@@ -115,7 +110,7 @@ def import_csv(csv_stream=None, save=False, field_separator=',', author_separato
         csv_stream = open(csv_stream)
     new_books = []
     for rec in csv.DictReader(csv_stream, delimiter=field_separator):
-        if Book.objects(title=rec["Title"]):
+        if Book.objects(title=rec["Title"], subtitle=rec["Subtitle"]):
             continue
         book_authors = authors_field_to_author_list(rec['Authors'])
 
@@ -129,28 +124,7 @@ def import_csv(csv_stream=None, save=False, field_separator=',', author_separato
         save = input(f"Save {len(new_books)} books? y/[n]") == "y"
     if save:
         for new_book in new_books:
-            print(new_book)
-            if Book.objects(title=new_book.title):
-                continue
-            elif matching := find_book(new_book.title[:10], first=True):
-                try:
-                    ans = input("\nUpdate? y/[n]")
-                except KeyboardInterrupt:
-                    breakpoint()
-                except EOFError:
-                    break
-                if ans == 'y':
-                    matching.title = new_book.title
-                    matching.subtitle = new_book.subtitle
-                    matching.save()
-                else:
-                    ans = input(f"Add new {new_book!r} y/[n]?")
-                    if ans == "y":
-                        new_book.save()
-            else:
-                ans = input(f"Add new {new_book!r} y/[n]?")
-                if ans == "y":
-                    new_book.save()
+            new_book.save()
 
     return new_books
 

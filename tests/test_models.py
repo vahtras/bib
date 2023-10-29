@@ -1,8 +1,4 @@
-import io
-
-
 from models import Author, Book
-from program import import_csv
 
 
 def test_create_book_with_only_title():
@@ -60,7 +56,6 @@ def test_book_to_db(mongodb, client):
 
 def test_book_with_author_to_db(client):
     eric = Author(first='Eric', last='Idle')
-    eric.save()
     Book(title='Full Monty', authors=[eric]).save()
     books = Book.objects(authors__in=[eric])
     assert books[0].title == 'Full Monty'

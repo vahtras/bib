@@ -8,7 +8,8 @@ app = flask.Flask(__name__)
 
 @app.route('/')
 def index():
-    books = Book.objects().order_by('authors')
+    # books = Book.objects().sort('last')
+    books = Book.objects().aggregate({"$sort": {"authors.0.last": 1}})
     return flask.render_template('index.html', books=books, encode=base64.b64encode)
 
 
