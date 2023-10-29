@@ -46,7 +46,7 @@ def test_create_book_with_one_author():
    assert book.title == "It's"
 
 
-def test_book_to_db(mongodb, client):
+def test_book_to_db(mongodb, bib):
     book = Book(title='Foo')
     book.save()
 
@@ -54,7 +54,7 @@ def test_book_to_db(mongodb, client):
     assert new.title == 'Foo'
 
 
-def test_book_with_author_to_db(client):
+def test_book_with_author_to_db(bib):
     eric = Author(first='Eric', last='Idle')
     Book(title='Full Monty', authors=[eric]).save()
     books = Book.objects(authors__in=[eric])

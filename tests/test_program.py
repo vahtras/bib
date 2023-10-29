@@ -5,28 +5,28 @@ import pytest
 import program
 import models
 
-def test_add_no_authors():
+def test_add_no_authors(bib):
     with patch('program.input') as mock_input:
         mock_input.side_effect = EOFError
-        authors = program.add_authors()
+        authors = bib.add_authors()
 
     assert authors == []
 
 
-def test_add_one_authors(client):
+def test_add_one_authors(bib):
     with patch('program.input') as mock_input:
         mock_input.side_effect = ["foo, bar", EOFError]
-        authors = program.add_authors()
+        authors = bib.add_authors()
 
     assert len(authors) == 1
     assert authors[0].last == 'foo'
     assert authors[0].first == 'bar'
 
 
-def test_add_two_authors(client):
+def test_add_two_authors(bib):
     with patch('program.input') as mock_input:
         mock_input.side_effect = ["foo, bar", "baz, boo", EOFError]
-        authors = program.add_authors()
+        authors = bib.add_authors()
 
     assert len(authors) == 2
     assert authors[0].last == 'foo'
@@ -56,15 +56,15 @@ def test_add_two_authors(client):
         ),
     ]
 )
-def test_join_authors(inputs, expected):
-    assert program.join_authors(inputs) == expected
+def test_join_authors(inputs, expected, bib):
+    assert bib.join_authors(inputs) == expected
 
-def test_authors_field_to_author_list():
+def test_authors_field_to_author_list(bib):
     """
     >>> authors_field_to_list("Hayes, Hannibal;Curry, Kim")
     [Author(first="Hannibal", last="Hayes", Author(first="Kim", last="Curry"")]
     """
-    authors = program.authors_field_to_author_list("Hayes, Hannibal;Curry, Kim")
+    authors = bib.authors_field_to_author_list("Hayes, Hannibal;Curry, Kim")
     assert authors[0].first == "Hannibal"
     assert authors[1].last == "Curry"
 
@@ -75,20 +75,20 @@ def test_authors_field_to_author_list():
         ('kejsaren', "Kejsaren av Portugallien", 1),
     ]
 )
-def test_find_book(search_title, expected_title, matches, client):
+def test_find_book(search_title, expected_title, matches, bib):
     book = models.Book(title=expected_title)
     book.save()
 
     with patch('program.input') as mock_input:
         mock_input.side_effect = [search_title, EOFError]
-        books = program.find_book()
+        books = bib.find_book()
 
     assert len(books) == matches
     for book in books:
         book.delete()
 
 
-def test_import_csv_new(client):
+def test_import_csv_new(bib):
     finp = io.StringIO(
 """Title,Authors,Subtitle
 Purge,"Oksanen, Sofi",
@@ -96,7 +96,7 @@ Purge,"Oksanen, Sofi",
     )
     with patch('program.input') as mock_input:
         mock_input.side_effect = ["y", EOFError]
-        books = program.import_csv(finp, save=True)
+        books = bib.import_csv(finp, save=True)
 
     assert books[0].title == 'Purge'
     assert books[0].authors[0].last == 'Oksanen'
