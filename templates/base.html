@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+  <head>
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>{{ title }}</h2>
+      {% block content %}
+      <hr>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <ul class="navbar-nav mr-auto">
+              {% for sheet_name in htmls %}
+              {% if sheet_name == tab %}
+              <li class="nav-item"><a class="nav-link active" aria-current="page" href="/{{ sheet_name }}">{{ sheet_name }}</a></li>
+              {% else %}
+              <li class="nav-item"><a class="nav-link" href="/{{ sheet_name }}">{{ sheet_name }}</a></li>
+              {% endif %}
+              {% endfor %}
+          </ul>
+      </nav>
+      <hr>
+      {% endblock %}
+    </div>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+    {% block scripts %}
+  <script>
+    $(document).ready(function () {
+        $('#data').DataTable({
+        });
+    });
+  </script>
+   {% endblock %}
+  </body>
+</html>
