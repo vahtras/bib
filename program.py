@@ -1,4 +1,6 @@
 import csv
+import os
+import sys
 
 import mongoengine
 from models import Author, Book
@@ -6,6 +8,7 @@ from models import Author, Book
 class Bib():
 
     def connect(self, name):
+        self.name = name
         self.connection = mongoengine.register_connection(alias='default', name=name)
 
     def add_authors(self):
@@ -89,9 +92,9 @@ class Bib():
         self, csv_stream=None, save=False, field_separator=',', author_separator=';'
     ):
         if csv_stream is None:
-            csv_stream = input("Import csv file:[csvs/MyLibraryByAuthor.csv]")
+            csv_stream = input(f"Import csv file:[{self.name}/MyLibraryByAuthor.csv]")
             if not csv_stream.strip():
-                csv_stream = "csvs/MyLibraryByAuthor.csv"
+                csv_stream = f"{self.name}/MyLibraryByAuthor.csv"
         if isinstance(csv_stream, str):
             csv_stream = open(csv_stream)
         new_books = []
@@ -114,9 +117,20 @@ class Bib():
 
         return new_books
 
+    def update_images(self):
+        for i, b in enumerate(Book.objects(), start=1):
+            filename = f'{self.name}/img/{i:04d}.jpg'
+            with open(filename, 'rb') as img:
+                b.image.replace(img)
+                b.save()
+
 def main():
     bib = Bib()
-    bib.connect('bib')
+    try:
+        dbname = sys.argv[1]
+    except IndexError:
+        dbname = os.environ.get('MYLIB')
+    bib.connect(dbname)
 
     print("Welcome to my bibliography")
 
@@ -135,6 +149,8 @@ def main():
                 bib.list_books()
             if action == 'i':
                 bib.import_csv()
+            if action == 'u':
+                bib.update_images()
     except EOFError:
         print("\nDone books")
 

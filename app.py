@@ -1,4 +1,6 @@
 import base64
+import os
+
 import flask
 import mongoengine
 
@@ -13,5 +15,6 @@ def index():
 
 
 if __name__ == "__main__":
-    mongoengine.register_connection(alias='default', name='bib')
+    dbname = os.environ.get('MYLIB')
+    mongoengine.register_connection(alias='default', name=dbname)
     app.run(debug=True)

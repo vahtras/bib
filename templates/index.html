@@ -1,11 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
 <h1>Books</h1>
 
+<table class="table table-striped" id="data">
+    <thead>
+        <tr>
+            <th>img</th><th>Authors</th><th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
 {% for book in books %}
-<div>
-<hr>
+        <tr>
+            <td>
     {% if book.image %}
-    <img src="data:image/jpeg;base64,{{ encode(book.image.thumbnail.read()).decode() }}">
+            <img src="data:image/jpeg;base64,{{ encode(book.image.thumbnail.read()).decode() }}">
     {% endif %}
-    {{ book.authors.0.first }} {{ book.authors.0.last }}: <i>{{ book.title }}</i> 
-</div>
+            </td>
+            <td> {{ book.authors.0.first }} {{ book.authors.0.last }}</td>
+            <td><i>{{ book.title }}</i> </td>
+        </tr>
 {% endfor %}
+    </tbody>
+{% endblock %}
