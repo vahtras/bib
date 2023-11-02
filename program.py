@@ -1,5 +1,6 @@
 import csv
 import os
+import sqlite3
 import sys
 
 import mongoengine
@@ -124,6 +125,26 @@ class Bib():
                 b.image.replace(img)
                 b.save()
 
+    def import_sql(self, dbname: str) -> list[Book]:
+        with sqlite3.connect(dbname) as connection:
+            cursor = connection.cursor()
+            result = cursor.execute("SELECT * FROM BOOK;")
+
+            books = []
+
+            for row in result:
+                author_id = row[3]
+                first, last = cursor.execute(
+                    f"SELECT FIRSTNAME, LASTNAME FROM AUTHOR WHERE ID={author_id};"
+                ).fetchone()
+                authors = [Author(first=first, last=last)]
+                if row[1]:
+                    raise NotImplementedError
+                book = Book(title=row[-1], authors=authors)
+                books.append(book)
+
+            return books
+
 def main():
     bib = Bib()
     try:
@@ -155,6 +176,7 @@ def main():
         print("\nDone books")
 
     return result
+
 
 if __name__ == "__main__":
      result = main()

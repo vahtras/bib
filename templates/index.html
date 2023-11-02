@@ -14,11 +14,11 @@
         <tr>
             <td>
     {% if book.image %}
-            <img src="data:image/jpeg;base64,{{ encode(book.image.thumbnail.read()).decode() }}">
+    <img src="data:image/jpeg;base64,{{ encode(book.image.thumbnail.read()).decode() }}">
     {% endif %}
             </td>
             <td> {{ book.authors.0.first }} {{ book.authors.0.last }}</td>
-            <td><i>{{ book.title }}</i> </td>
+            <td><i>{{ book.title }}</i></td>
         </tr>
 {% endfor %}
     </tbody>
