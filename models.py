@@ -27,6 +27,14 @@ class Author(EmbeddedDocument):
             first = ""
         return Author(last=last.strip(), first=first.strip())
 
+    @staticmethod
+    def from_sql(author_id, connection):
+        cursor = connection.cursor()
+        first, last = cursor.execute(
+            f"SELECT FIRSTNAME, LASTNAME FROM AUTHOR WHERE ID={author_id};"
+        ).fetchone()
+        return Author(first=first, last=last)
+
 
 class Book(Document):
     title = StringField(required=True)

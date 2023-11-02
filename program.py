@@ -126,30 +126,24 @@ class Bib():
                 b.save()
 
     def import_sql(self, dbname: str) -> list[Book]:
+        books = []
         with sqlite3.connect(dbname) as connection:
-            cursor = connection.cursor()
-            result = cursor.execute("SELECT * FROM BOOK;")
-
-            books = []
+            cursor1 = connection.cursor()
+            result = cursor1.execute("SELECT * FROM BOOK;")
 
             for row in result:
+                title = row[-1]
                 author_id = row[3]
-                first, last = cursor.execute(
-                    f"SELECT FIRSTNAME, LASTNAME FROM AUTHOR WHERE ID={author_id};"
-                ).fetchone()
-                authors = [Author(first=first, last=last)]
                 other_ids = row[1][1: -1]
+                authors = [Author.from_sql(author_id, connection)]
                 if other_ids:
                     author_ids = [int(_id) for _id in other_ids.split(',')]
                     for author_id in author_ids:
-                        first, last = cursor.execute(
-                            f"SELECT FIRSTNAME, LASTNAME FROM AUTHOR WHERE ID={author_id};"
-                        ).fetchone()
-                    authors.append(Author(first=first, last=last))
-                book = Book(title=row[-1], authors=authors)
+                        authors.append(Author.from_sql(author_id, connection))
+                book = Book(title=title, authors=authors)
                 books.append(book)
 
-            return books
+        return books
 
 def main():
     bib = Bib()
@@ -176,6 +170,10 @@ def main():
                 bib.list_books()
             if action == 'i':
                 bib.import_csv()
+            if action == 'sql':
+                sql_file = f'{dbname}/My Library/mylibrary.db'
+                books = bib.import_sql(sql_file)
+                print(len(books))
             if action == 'u':
                 bib.update_images()
     except EOFError:
