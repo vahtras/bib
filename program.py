@@ -138,8 +138,14 @@ class Bib():
                     f"SELECT FIRSTNAME, LASTNAME FROM AUTHOR WHERE ID={author_id};"
                 ).fetchone()
                 authors = [Author(first=first, last=last)]
-                if row[1]:
-                    raise NotImplementedError
+                other_ids = row[1][1: -1]
+                if other_ids:
+                    author_ids = [int(_id) for _id in other_ids.split(',')]
+                    for author_id in author_ids:
+                        first, last = cursor.execute(
+                            f"SELECT FIRSTNAME, LASTNAME FROM AUTHOR WHERE ID={author_id};"
+                        ).fetchone()
+                    authors.append(Author(first=first, last=last))
                 book = Book(title=row[-1], authors=authors)
                 books.append(book)
 
