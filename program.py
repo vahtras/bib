@@ -8,9 +8,15 @@ from models import Author, Book
 
 class Bib():
 
-    def connect(self, name):
-        self.name = name
-        self.connection = mongoengine.register_connection(alias='default', name=name)
+    def __init__(self, dbname=None):
+        self.dbname = dbname
+        self.connect()
+
+    def connect(self):
+        self.connection = mongoengine.register_connection(
+            alias='default',
+            name=self.dbname
+        )
 
     def add_authors(self):
         """
@@ -90,14 +96,24 @@ class Bib():
         return authors
 
     def import_csv(
-        self, csv_stream=None, save=False, field_separator=',', author_separator=';'
-    ):
+        self, csv_stream=None,
+        field_separator: str = ',',
+        author_separator: str = ';'
+    ) -> list[Book]:
+        """
+        Read csv file with field Title, Subtitle, Authors
+        Authors is semi-colon separated list of authors in the format "Last, First"
+        """
+
+        csv_default = f"{self.dbname}/MyLibraryByAuthor.csv"
+
         if csv_stream is None:
-            csv_stream = input(f"Import csv file:[{self.name}/MyLibraryByAuthor.csv]")
+            csv_stream = input(f"Import csv file:[{csv_default}]")
             if not csv_stream.strip():
-                csv_stream = f"{self.name}/MyLibraryByAuthor.csv"
+                csv_stream =  csv_default
         if isinstance(csv_stream, str):
             csv_stream = open(csv_stream)
+
         new_books = []
         for rec in csv.DictReader(csv_stream, delimiter=field_separator):
             if Book.objects(title=rec["Title"], subtitle=rec["Subtitle"]):
@@ -108,15 +124,11 @@ class Bib():
                 Book(title=rec["Title"], subtitle=rec["Subtitle"], authors=book_authors)
             )
 
-        if not save:
-            for new_book in new_books:
-                print(new_book)
-            save = input(f"Save {len(new_books)} books? y/[n]") == "y"
-        if save:
-            for new_book in new_books:
-                new_book.save()
-
         return new_books
+
+    def save_books(self, new_books: list[Book]) -> None:
+        for new_book in new_books:
+            new_book.save()
 
     def update_images(self):
         for i, b in enumerate(Book.objects(), start=1):
@@ -126,32 +138,34 @@ class Bib():
                 b.save()
 
     def import_sql(self, dbname: str) -> list[Book]:
+        """
+        Read SQL data from mylib app
+
+        first author is stored as int
+        additional authors as comma-separated string in brackets: e.g. '[1,2,3]'
+        """
         books = []
         with sqlite3.connect(dbname) as connection:
-            cursor1 = connection.cursor()
-            result = cursor1.execute("SELECT * FROM BOOK;")
+            cursor = connection.cursor()
+            result = cursor.execute("SELECT TITLE,AUTHOR,ADDITIONAL_AUTHORS FROM BOOK;")
 
-            for row in result:
-                title = row[-1]
-                author_id = row[3]
-                other_ids = row[1][1: -1]
-                authors = [Author.from_sql(author_id, connection)]
+            for title, author_id, other_ids in result:
+                author_ids = [author_id]
+                other_ids = other_ids.strip('[]')
                 if other_ids:
-                    author_ids = [int(_id) for _id in other_ids.split(',')]
-                    for author_id in author_ids:
-                        authors.append(Author.from_sql(author_id, connection))
+                    author_ids.extend(int(_) for _ in other_ids.split(','))
+                authors = [Author.from_sql(_, connection) for _ in author_ids]
                 book = Book(title=title, authors=authors)
                 books.append(book)
 
         return books
 
 def main():
-    bib = Bib()
     try:
         dbname = sys.argv[1]
     except IndexError:
         dbname = os.environ.get('MYLIB')
-    bib.connect(dbname)
+    bib = Bib(dbname)
 
     print("Welcome to my bibliography")
 
