@@ -131,13 +131,13 @@ CREATE TABLE BOOK ( ID INTEGER PRIMARY KEY AUTOINCREMENT , ADDITIONAL_AUTHORS TE
 INSERT INTO BOOK VALUES(1,'[]', '', 1, '', '', '', '', null, '', null, '', '', 0, '', '', '', 'Purge');
 """
     )
-    with sqlite3.connect('test.db') as connection:
+    with sqlite3.connect('tests/test.db') as connection:
         cursor = connection.cursor()
         for cmd in sql.split('\n'):
             print(cmd)
             cursor.execute(cmd)
 
-    books = bib.import_sql('test.db')
+    books = bib.import_sql('tests/test.db')
     assert books[0].title == 'Purge'
     assert books[0].authors[0].first == 'Sofi'
 
@@ -153,13 +153,13 @@ CREATE TABLE BOOK ( ID INTEGER PRIMARY KEY AUTOINCREMENT , ADDITIONAL_AUTHORS TE
 INSERT INTO BOOK VALUES(1,'[2]', '', 1, '', '', '', '', null, '', null, '', '', 0, '', '', '', 'Roseanna');
 """
     )
-    with sqlite3.connect('test.db') as connection:
+    with sqlite3.connect('tests/test.db') as connection:
         cursor = connection.cursor()
         for cmd in sql.split('\n'):
             print(cmd)
             cursor.execute(cmd)
 
-    books = bib.import_sql('test.db')
+    books = bib.import_sql('tests/test.db')
     assert books[0].title == 'Roseanna'
     assert books[0].authors[0].first == 'Maj'
     assert books[0].authors[1].first == 'Per'
@@ -179,13 +179,13 @@ INSERT INTO BOOK VALUES(1,'[]', '', 1, '', '', '', '', null, '', null, '', '', 0
 INSERT INTO BOOK VALUES(2,'[3]', '', 2, '', '', '', '', null, '', null, '', '', 0, '', '', '', 'Roseanna');
 """
     )
-    with sqlite3.connect('test.db') as connection:
+    with sqlite3.connect('tests/test.db') as connection:
         cursor = connection.cursor()
         for cmd in sql.split('\n'):
             print(cmd)
             cursor.execute(cmd)
 
-    books = bib.import_sql('test.db')
+    books = bib.import_sql('tests/test.db')
     assert books[0].title == 'Purge'
     assert books[0].authors[0].first == 'Sofi'
 
