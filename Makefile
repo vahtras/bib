@@ -9,8 +9,10 @@ showmenu:
 	@echo "Commands:\n\tall:\tcsv and img files"
 	@echo "\tls:\tshow source"
 	@echo "\tdownload:\tunpacked zip Google archive in Downloads"
+	@echo SRCDIR=$(SRCDIR)
+	@echo IMGDIR=$(IMGDIR)
 
-all: $(MYLIB)/$(CSV) $(MYLIB)/img/0001.jpg
+all: $(MYLIB)/$(CSV) $(IMGDIR)/0001.jpg
 
 ls: 
 	tree $(MYLIB)

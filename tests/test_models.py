@@ -1,3 +1,5 @@
+import pytest
+
 from models import Author, Book
 
 
@@ -65,3 +67,40 @@ def test_titles(mongodb):
     assert 'titles' in mongodb.list_collection_names()
     one = mongodb.titles.find_one({'title': 'One Title'})
     assert one['title'] == "One Title"
+
+@pytest.mark.parametrize(
+    'book, hash',
+    [
+        (
+            Book(
+                title="It's",
+                authors=[Author(last="Cleese", first="John")]
+            ),
+            -1399619719
+        ),
+        (
+            Book(
+                title="Rootsi-Eesti sõnaraamat",
+                authors=[Author(last="Aaloe", first="Ülev")]
+            ),
+            1574084179
+        ),
+        (
+            Book(
+                title="Statistical Mechanics",
+                authors=[Author(last="Abe", first="Ryuzo")]
+            ),
+            -113177667
+        ),
+        (
+            Book(
+                title="Hur man förälskar sig i en man som bor i en buske",
+                subtitle="roman",
+                authors=[Author(last="Abrahamson", first="Emmy")]
+            ),
+            -575852586
+        ),
+    ]
+)
+def test_hash(book, hash):
+    assert book.hash() == hash

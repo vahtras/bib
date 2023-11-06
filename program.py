@@ -183,7 +183,8 @@ def main():
             if action == 'l':
                 bib.list_books()
             if action == 'i':
-                bib.import_csv()
+                news = bib.import_csv()
+                breakpoint()
             if action == 'sql':
                 sql_file = f'{dbname}/My Library/mylibrary.db'
                 books = bib.import_sql(sql_file)

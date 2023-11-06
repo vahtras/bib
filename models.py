@@ -7,6 +7,10 @@ from mongoengine import (
     fields,
 )
 
+import hashcode
+
+SUBTITLE_SEPARATOR = " : "
+
 class Author(EmbeddedDocument):
     first = StringField(required=True)
     last = StringField(required=True)
@@ -54,3 +58,17 @@ class Book(Document):
             return f'{self.title} - {self.authors[0]}'
         else:
             return f'{self.title} - {self.authors[0]} et al.'
+
+    def hash(self):
+        hash_str = self._hash_str()
+        hash_code = hashcode.java_string_hashcode(hash_str)
+        return hash_code
+
+    def _hash_str(self):
+        hash_name = f'{self.authors[0].first} {self.authors[0].last}'
+        if self.subtitle:
+            hash_title =f'{self.title}{SUBTITLE_SEPARATOR}{self.subtitle}'
+        else:
+            hash_title = self.title
+        hash_str = f'{hash_title}{hash_name}'
+        return hash_str
