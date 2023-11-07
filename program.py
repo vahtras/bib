@@ -148,7 +148,6 @@ class Bib():
                     book.save()
             except FileNotFoundError:
                 print(book)
-                breakpoint()
 
     def import_sql(self, dbname: str) -> list[Book]:
         """
@@ -164,9 +163,9 @@ class Bib():
 
             for title, author_id, other_ids in result:
                 author_ids = [author_id]
-                other_ids = other_ids.strip('[]')
                 if other_ids:
-                    author_ids.extend(int(_) for _ in other_ids.split(','))
+                    if (oids := other_ids.strip('[]')):
+                        author_ids.extend(int(_) for _ in oids.split(','))
                 authors = [Author.from_sql(_, connection) for _ in author_ids]
                 book = Book(title=title, authors=authors)
                 books.append(book)
