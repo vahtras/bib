@@ -75,7 +75,8 @@ class Bib():
     def list_books(self):
         print(f"Listing of {Book._collection}")
         for book in Book.objects():
-            print(book.title)
+            ch = "\U0001F4F7" if book.image else "X"
+            print(ch, book.title)
         print(f"\n{len(Book.objects())} books\n")
 
 
@@ -189,7 +190,7 @@ def main():
         list [l]
         import [i]
         sql [sql]
-        update[u]
+        update images [u]
     > """
     result = None
     try:

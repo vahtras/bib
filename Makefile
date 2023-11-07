@@ -12,7 +12,7 @@ showmenu:
 	@echo SRCDIR=$(SRCDIR)
 	@echo IMGDIR=$(IMGDIR)
 
-all: $(MYLIB)/$(CSV) extract
+all: download $(MYLIB)/$(CSV) extract
 
 ls: 
 	tree $(MYLIB)

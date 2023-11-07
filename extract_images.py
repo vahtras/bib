@@ -12,4 +12,4 @@ for i, line in enumerate(open(txt_file), start=1):
     imgfilename = f'{MYLIB}/img/image_{hashcode}.jpg'
     with open(imgfilename, 'wb') as imgfile:
         imgfile.write(imgdata)
-    print(f'{imgfilename}')
+    print(f'{i} {imgfilename}')

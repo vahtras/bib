@@ -34,10 +34,13 @@ class Author(EmbeddedDocument):
     @staticmethod
     def from_sql(author_id, connection):
         cursor = connection.cursor()
-        first, last = cursor.execute(
+        result = cursor.execute(
             f"SELECT FIRSTNAME, LASTNAME FROM AUTHOR WHERE ID={author_id};"
         ).fetchone()
-        return Author(first=first, last=last)
+        if result:
+            first, last = result
+            return Author(first=first, last=last)
+        breakpoint()
 
 
 class Book(Document):
@@ -71,7 +74,10 @@ class Book(Document):
         return hash_code
 
     def _hash_str(self):
-        hash_name = f'{self.authors[0].first} {self.authors[0].last}'
+        if self.authors[0].first:
+            hash_name = f'{self.authors[0].first} {self.authors[0].last}'
+        else:
+            hash_name = f'{self.authors[0].last}'
         hash_title = self._hash_title()
         hash_str = f'{hash_title}{hash_name}'
         return hash_str
