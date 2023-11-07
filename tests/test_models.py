@@ -11,10 +11,11 @@ def test_create_book_with_only_title():
 
 def test_create_book_with_subtitle():
    book = Book(
-        title="It's",
-        subtitle="Monty Python",
+       title="It's:Monty Python",
     )
-   assert book.title == "It's"
+   assert book.title == "It's:Monty Python"
+   assert book.short == "It's"
+   assert book.subtitle == "Monty Python"
 
 def test_create_author():
     author = Author(
@@ -94,11 +95,31 @@ def test_titles(mongodb):
         ),
         (
             Book(
-                title="Hur man förälskar sig i en man som bor i en buske",
-                subtitle="roman",
+                title="Hur man förälskar sig i en man som bor i en buske:roman",
                 authors=[Author(last="Abrahamson", first="Emmy")]
             ),
-            -575852586
+            -1350801526
+        ),
+#       (
+#           Book(
+#               title="Denna dagen, ett liv",
+#               authors=[Author(last="Andersen", first="Jens")]
+#           ),
+#           1904913366
+#       ),
+        (
+            Book(
+                title="The Girl in a Swing",
+                authors=[Author(last="Adams", first="Richard")]
+            ),
+            953646402
+        ),
+        (
+            Book(
+                title="The \u200bPlague Dogs",
+                authors=[Author(last="Adams", first="Richard")]
+            ),
+            736864338
         ),
     ]
 )

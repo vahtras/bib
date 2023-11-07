@@ -12,7 +12,7 @@ showmenu:
 	@echo SRCDIR=$(SRCDIR)
 	@echo IMGDIR=$(IMGDIR)
 
-all: $(MYLIB)/$(CSV) $(IMGDIR)/0001.jpg
+all: $(MYLIB)/$(CSV) extract
 
 ls: 
 	tree $(MYLIB)
@@ -20,9 +20,8 @@ ls:
 $(MYLIB)/$(CSV):$(MYLIB)/My\ Library/$(XLS)
 	cd $(MYLIB) && python $(ROOT)/clean.py $(SRCDIR)/$(XLS)
 
-$(IMGDIR)/0001.jpg: $(SRCDIR)/MyLibraryImages.txt
-	test -d $(IMGDIR) || mkdir -p $(IMGDIR)
-	cd $(IMGDIR) && python $(ROOT)/extract_images.py "$?"
+extract: $(SRCDIR)/MyLibraryImages.txt
+	python extract_images.py
 
 download:
 	unzip "$$(ls -t $(HOME)/Downloads/My\ Library-*.zip | head -1)" -d $(MYLIB)

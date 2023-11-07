@@ -18,6 +18,9 @@ class Bib():
             name=self.dbname
         )
 
+    def __contains__(self, book):
+        return bool(Book.objects(title=book.title))
+
     def add_authors(self):
         """
         Read from input author names in format "last, first"
@@ -116,26 +119,35 @@ class Bib():
 
         new_books = []
         for rec in csv.DictReader(csv_stream, delimiter=field_separator):
-            if Book.objects(title=rec["Title"], subtitle=rec["Subtitle"]):
+            if Book.objects(title=rec["Title"]):
                 continue
             book_authors = self.authors_field_to_author_list(rec['Authors'])
 
             new_books.append(
-                Book(title=rec["Title"], subtitle=rec["Subtitle"], authors=book_authors)
+                Book(title=rec["Title"], authors=book_authors)
             )
 
         return new_books
 
     def save_books(self, new_books: list[Book]) -> None:
         for new_book in new_books:
-            new_book.save()
+            try:
+                new_book.save()
+            except Exception as e:
+                print(e)
+                print(new_book.to_json())
+                breakpoint()
 
     def update_images(self):
-        for i, b in enumerate(Book.objects(), start=1):
-            filename = f'{self.name}/img/{i:04d}.jpg'
-            with open(filename, 'rb') as img:
-                b.image.replace(img)
-                b.save()
+        for book in Book.objects():
+            filename = f'{self.dbname}/img/image_{book.hash()}.jpg'
+            try:
+                with open(filename, 'rb') as img:
+                    book.image.replace(img)
+                    book.save()
+            except FileNotFoundError:
+                print(book)
+                breakpoint()
 
     def import_sql(self, dbname: str) -> list[Book]:
         """
@@ -169,7 +181,16 @@ def main():
 
     print("Welcome to my bibliography")
 
-    menu = "\nCommands:\n add [a]\n find-one [f]\n find [s]\n list[l]\n import [i]\n> "
+    menu = """
+    Commands:
+        add [a]
+        find-one [f]
+        find [s]
+        list [l]
+        import [i]
+        sql [sql]
+        update[u]
+    > """
     result = None
     try:
         while True:
@@ -183,12 +204,14 @@ def main():
             if action == 'l':
                 bib.list_books()
             if action == 'i':
-                news = bib.import_csv()
+                books = bib.import_csv()
                 breakpoint()
             if action == 'sql':
                 sql_file = f'{dbname}/My Library/mylibrary.db'
                 books = bib.import_sql(sql_file)
                 print(len(books))
+            if action == 'save':
+                bib.save_books(books)
             if action == 'u':
                 bib.update_images()
     except EOFError:

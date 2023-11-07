@@ -9,10 +9,10 @@ from mongoengine import (
 
 import hashcode
 
-SUBTITLE_SEPARATOR = " : "
+SUBTITLE_SEPARATOR = ":"
 
 class Author(EmbeddedDocument):
-    first = StringField(required=True)
+    first = StringField(required=False)
     last = StringField(required=True)
     meta = {'collection': 'authors'}
 
@@ -42,14 +42,20 @@ class Author(EmbeddedDocument):
 
 class Book(Document):
     title = StringField(required=True)
-    subtitle = StringField()
     authors = ListField(EmbeddedDocumentField(Author))
     image = fields.ImageField(thumbnail_size=(100, 70, False))
     meta = {'collection': 'books'}
 
     def __repr__(self):
-        str_subtitle = f' subtitle="{self.subtitle}"' if self.subtitle else ''
-        return f'Book(title="{self.title}"{str_subtitle})'
+        return f'Book(title="{self.title}")'
+
+    @property
+    def short(self):
+        return self.title.split(SUBTITLE_SEPARATOR)[0].strip()
+
+    @property
+    def subtitle(self):
+        return self.title.split(SUBTITLE_SEPARATOR)[1].strip()
 
     def __str__(self):
         if len(self.authors) == 0:
@@ -66,9 +72,10 @@ class Book(Document):
 
     def _hash_str(self):
         hash_name = f'{self.authors[0].first} {self.authors[0].last}'
-        if self.subtitle:
-            hash_title =f'{self.title}{SUBTITLE_SEPARATOR}{self.subtitle}'
-        else:
-            hash_title = self.title
+        hash_title = self._hash_title()
         hash_str = f'{hash_title}{hash_name}'
         return hash_str
+
+    def _hash_title(self):
+        return self.title
+
