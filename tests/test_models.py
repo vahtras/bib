@@ -56,6 +56,13 @@ def test_book_to_db(mongodb, bib):
     new = Book.objects().first()
     assert new.title == 'Foo'
 
+def test_hylla_to_db(mongodb, bib):
+    book = Book(title='Foo', hylla='A1')
+    book.save()
+
+    new = Book.objects(hylla='A1').first()
+    assert new.title == 'Foo'
+
 
 def test_book_with_author_to_db(bib):
     eric = Author(first='Eric', last='Idle')

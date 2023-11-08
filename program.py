@@ -1,4 +1,5 @@
 import csv
+import json
 import os
 import sqlite3
 import sys
@@ -159,15 +160,25 @@ class Bib():
         books = []
         with sqlite3.connect(dbname) as connection:
             cursor = connection.cursor()
-            result = cursor.execute("SELECT TITLE,AUTHOR,ADDITIONAL_AUTHORS FROM BOOK;")
+            result = cursor.execute(
+                "SELECT TITLE,AUTHOR,ADDITIONAL_AUTHORS, COMMENTS FROM BOOK;"
+            )
 
-            for title, author_id, other_ids in result:
+            for title, author_id, other_ids, comments in result:
                 author_ids = [author_id]
                 if other_ids:
                     if (oids := other_ids.strip('[]')):
                         author_ids.extend(int(_) for _ in oids.split(','))
                 authors = [Author.from_sql(_, connection) for _ in author_ids]
-                book = Book(title=title, authors=authors)
+
+                hylla = None
+                if comments:
+                    data = json.loads(comments)
+                    for d in data:
+                        if d.get('title') == 'Hylla':
+                            hylla = d['content']
+                            break
+                book = Book(title=title, authors=authors, hylla=hylla)
                 books.append(book)
 
         return books

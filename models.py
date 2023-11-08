@@ -47,6 +47,7 @@ class Book(Document):
     title = StringField(required=True)
     authors = ListField(EmbeddedDocumentField(Author))
     image = fields.ImageField(thumbnail_size=(100, 70, False))
+    hylla = StringField()
     meta = {'collection': 'books'}
 
     def __repr__(self):

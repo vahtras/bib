@@ -3,7 +3,6 @@ from unittest.mock import patch
 import pytest
 import sqlite3
 
-import program
 from models import Book, Author
 
 def test_add_no_authors(bib):
@@ -120,15 +119,18 @@ Purge,"Oksanen, Sofi",
     assert books[0].authors[0].last == 'Oksanen'
     assert books[0].authors[0].first == 'Sofi'
 
-def test_import_sql_single_author(bib):
-    sql = (
-"""
+SQL_TEMPLATE = """\
 DROP TABLE IF EXISTS AUTHOR;
 CREATE TABLE AUTHOR ( ID INTEGER PRIMARY KEY AUTOINCREMENT , FIRSTNAME TEXT, LASTNAME TEXT );
-INSERT INTO AUTHOR VALUES(1,'Sofi', 'Oksanen');
 DROP TABLE IF EXISTS BOOK;
 CREATE TABLE BOOK ( ID INTEGER PRIMARY KEY AUTOINCREMENT , ADDITIONAL_AUTHORS TEXT, AMAZON_URL TEXT, AUTHOR INTEGER, CATEGORIES TEXT, COMMENTS TEXT, COVER_PATH TEXT, FNAC_URL TEXT, IN_WISHLIST INTEGER, ISBN TEXT, PAGES INTEGER, PUBLISHED_DATE TEXT, PUBLISHER TEXT, READ INTEGER, READING_DATES TEXT, SERIES TEXT, SUMMARY TEXT, TITLE TEXT );
-INSERT INTO BOOK VALUES(1,'[]', '', 1, '', '', '', '', null, '', null, '', '', 0, '', '', '', 'Purge');
+"""
+
+def test_import_sql_single_author(bib):
+    sql = (
+f"""{SQL_TEMPLATE}
+INSERT INTO AUTHOR VALUES(1,'Sofi', 'Oksanen');
+INSERT INTO BOOK VALUES( 1,'[]', '', 1, '', '', '', '', null, '', null, '', '', 0, '', '', '', 'Purge');
 """
     )
     with sqlite3.connect('tests/test.db') as connection:
@@ -143,13 +145,9 @@ INSERT INTO BOOK VALUES(1,'[]', '', 1, '', '', '', '', null, '', null, '', '', 0
 
 def test_import_sql_multi_author(bib):
     sql = (
-"""
-DROP TABLE IF EXISTS AUTHOR;
-CREATE TABLE AUTHOR ( ID INTEGER PRIMARY KEY AUTOINCREMENT , FIRSTNAME TEXT, LASTNAME TEXT );
+f"""{SQL_TEMPLATE}
 INSERT INTO AUTHOR VALUES(1,'Maj', 'Sjövall');
 INSERT INTO AUTHOR VALUES(2,'Per', 'Walöö');
-DROP TABLE IF EXISTS BOOK;
-CREATE TABLE BOOK ( ID INTEGER PRIMARY KEY AUTOINCREMENT , ADDITIONAL_AUTHORS TEXT, AMAZON_URL TEXT, AUTHOR INTEGER, CATEGORIES TEXT, COMMENTS TEXT, COVER_PATH TEXT, FNAC_URL TEXT, IN_WISHLIST INTEGER, ISBN TEXT, PAGES INTEGER, PUBLISHED_DATE TEXT, PUBLISHER TEXT, READ INTEGER, READING_DATES TEXT, SERIES TEXT, SUMMARY TEXT, TITLE TEXT );
 INSERT INTO BOOK VALUES(1,'[2]', '', 1, '', '', '', '', null, '', null, '', '', 0, '', '', '', 'Roseanna');
 """
     )
@@ -167,14 +165,10 @@ INSERT INTO BOOK VALUES(1,'[2]', '', 1, '', '', '', '', null, '', null, '', '', 
 
 def test_import_sql_multi_books(bib):
     sql = (
-"""
-DROP TABLE IF EXISTS AUTHOR;
-CREATE TABLE AUTHOR ( ID INTEGER PRIMARY KEY AUTOINCREMENT , FIRSTNAME TEXT, LASTNAME TEXT );
+f"""{SQL_TEMPLATE}
 INSERT INTO AUTHOR VALUES(1,'Sofi', 'Oksanen');
 INSERT INTO AUTHOR VALUES(2,'Maj', 'Sjövall');
 INSERT INTO AUTHOR VALUES(3,'Per', 'Walöö');
-DROP TABLE IF EXISTS BOOK;
-CREATE TABLE BOOK ( ID INTEGER PRIMARY KEY AUTOINCREMENT , ADDITIONAL_AUTHORS TEXT, AMAZON_URL TEXT, AUTHOR INTEGER, CATEGORIES TEXT, COMMENTS TEXT, COVER_PATH TEXT, FNAC_URL TEXT, IN_WISHLIST INTEGER, ISBN TEXT, PAGES INTEGER, PUBLISHED_DATE TEXT, PUBLISHER TEXT, READ INTEGER, READING_DATES TEXT, SERIES TEXT, SUMMARY TEXT, TITLE TEXT );
 INSERT INTO BOOK VALUES(1,'[]', '', 1, '', '', '', '', null, '', null, '', '', 0, '', '', '', 'Purge');
 INSERT INTO BOOK VALUES(2,'[3]', '', 2, '', '', '', '', null, '', null, '', '', 0, '', '', '', 'Roseanna');
 """
@@ -192,3 +186,26 @@ INSERT INTO BOOK VALUES(2,'[3]', '', 2, '', '', '', '', null, '', null, '', '', 
     assert books[1].title == 'Roseanna'
     assert books[1].authors[0].first == 'Maj'
     assert books[1].authors[1].first == 'Per'
+
+
+def test_import_sql_with_hylla(bib):
+    sql = (
+"""
+DROP TABLE IF EXISTS AUTHOR;
+CREATE TABLE AUTHOR ( ID INTEGER PRIMARY KEY AUTOINCREMENT , FIRSTNAME TEXT, LASTNAME TEXT );
+INSERT INTO AUTHOR VALUES(1,'Sofi', 'Oksanen');
+DROP TABLE IF EXISTS BOOK;
+CREATE TABLE BOOK ( ID INTEGER PRIMARY KEY AUTOINCREMENT , ADDITIONAL_AUTHORS TEXT, AMAZON_URL TEXT, AUTHOR INTEGER, CATEGORIES TEXT, COMMENTS TEXT, COVER_PATH TEXT, FNAC_URL TEXT, IN_WISHLIST INTEGER, ISBN TEXT, PAGES INTEGER, PUBLISHED_DATE TEXT, PUBLISHER TEXT, READ INTEGER, READING_DATES TEXT, SERIES TEXT, SUMMARY TEXT, TITLE TEXT );
+INSERT INTO BOOK VALUES(1,'[]', '', 1, '', '[{"content": "E1", "title": "Hylla"}]', '', '', null, '', null, '', '', 0, '', '', '', 'Purge');
+"""
+    )
+    with sqlite3.connect('tests/test.db') as connection:
+        cursor = connection.cursor()
+        for cmd in sql.split('\n'):
+            print(cmd)
+            cursor.execute(cmd)
+
+    books = bib.import_sql('tests/test.db')
+    assert books[0].title == 'Purge'
+    assert books[0].authors[0].first == 'Sofi'
+    assert books[0].hylla == 'E1'
