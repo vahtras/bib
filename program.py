@@ -4,8 +4,12 @@ import os
 import sqlite3
 import sys
 
+import dotenv
 import mongoengine
+
 from models import Author, Book
+
+dotenv.load_dotenv()
 
 class Bib():
 

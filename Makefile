@@ -24,4 +24,5 @@ extract: $(SRCDIR)/MyLibraryImages.txt
 	python extract_images.py
 
 download:
+	test -d $(MYLIB) || mkdir -p $(MYLIB)/img
 	unzip "$$(ls -t $(HOME)/Downloads/My\ Library-*.zip | head -1)" -d $(MYLIB)
