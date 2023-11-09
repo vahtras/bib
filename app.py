@@ -2,14 +2,17 @@
 import base64
 import os
 
+import dotenv
 import flask
 import mongoengine
 
 from models import Book
 
-app = flask.Flask(__name__)
+dotenv.load_dotenv()
 dbname = os.environ.get('MYLIB')
 mongoengine.register_connection(alias='default', name=dbname)
+
+app = flask.Flask(__name__)
 
 @app.route('/')
 def index():
