@@ -8,6 +8,8 @@ import mongoengine
 from models import Book
 
 app = flask.Flask(__name__)
+dbname = os.environ.get('MYLIB')
+mongoengine.register_connection(alias='default', name=dbname)
 
 @app.route('/')
 def index():
@@ -16,6 +18,4 @@ def index():
 
 
 if __name__ == "__main__":
-    dbname = os.environ.get('MYLIB')
-    mongoengine.register_connection(alias='default', name=dbname)
     app.run(debug=True, port=os.environ.get("PORT", 5000))
