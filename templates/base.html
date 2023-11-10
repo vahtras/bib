@@ -34,6 +34,12 @@
   <script>
     $(document).ready(function () {
         $('#data').DataTable({
+            order: [[1, 'asc']],
+            columns: [
+                {orderable: false, searchable: false},
+                {orderable: true, searchable: true},
+                {orderable: true, searchable: true},
+            ]
         });
     });
   </script>

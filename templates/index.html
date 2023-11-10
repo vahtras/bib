@@ -17,7 +17,7 @@
     <img src="data:image/jpeg;base64,{{ encode(book.image.thumbnail.read()).decode() }}">
     {% endif %}
             </td>
-            <td> {{ book.authors.0.first }} {{ book.authors.0.last }}</td>
+            <td> {{ book.authors.0.last }}, {{ book.authors.0.first }} </td>
             <td><i>{{ book.title }}</i></td>
         </tr>
 {% endfor %}
