@@ -23,6 +23,9 @@ $(MYLIB)/$(CSV):$(MYLIB)/My\ Library/$(XLS)
 extract: $(SRCDIR)/MyLibraryImages.txt
 	python extract_images.py
 
+compress:
+	for jpg in $(IMGDIR)/*.jpg; do ls -s $$jpg; mogrify -resize 128x128 $$jpg; ls -s $$jpg;done
+
 download:
 	test -d $(MYLIB) || mkdir -p $(MYLIB)/img
 	unzip "$$(ls -t $(HOME)/Downloads/My\ Library-*.zip | head -1)" -d $(MYLIB)
