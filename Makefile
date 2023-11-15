@@ -23,8 +23,18 @@ $(MYLIB)/$(CSV):$(MYLIB)/My\ Library/$(XLS)
 extract: $(SRCDIR)/MyLibraryImages.txt
 	python extract_images.py
 
-compress:
-	for jpg in $(IMGDIR)/*.jpg; do ls -s $$jpg; mogrify -resize 128x128 $$jpg; ls -s $$jpg;done
+lsten:
+	ls -s $(IMGDIR) | sort -nr | head $$LIMIT
+	@# for jpg in $$(ls -s $(IMGDIR)/*.jpg | sort -nr | head %$LIMIT | cut -d " " -f 2); do echo $$(basename $$jpg) ; done
+
+mvten:
+	ls -s $(IMGDIR) | sort -nr | head $$LIMIT
+	for jpg in $$(ls -s $(IMGDIR)/*.jpg | sort -nr | head $$LIMIT | cut -d " " -f 2); do touch $$jpg; mv -v $$jpg /tmp; done
+
+mgten:
+	cd /tmp && mogrify -resize 777x777 $$(ls -t *.jpg | head $$LIMIT)
+opten:
+	cd /tmp && for i in $$(ls -t *.jpg | head $$LIMIT); do open $$i; done
 
 download:
 	test -d $(MYLIB) || mkdir -p $(MYLIB)/img
