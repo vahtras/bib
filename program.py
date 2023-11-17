@@ -68,21 +68,21 @@ class Bib():
         search_string = search_string.strip()
         if first:
             book = Book.objects(title__icontains=search_string).first()
-            print(book)
+            self.list_books([book])
             return book
         else:
             books = Book.objects(title__icontains=search_string)
-            for book in books:
-                print(book)
-            print(f"\n{len(books)} found mathing {search_string}")
+            self.list_books(books)
             return books
 
-    def list_books(self):
+    def list_books(self, books=None):
         print(f"Listing of {Book._collection}")
-        for book in Book.objects():
+        if books is None:
+            books = Book.objects()
+        for book in books:
             ch = "\U0001F4F7" if book.image else "X"
             print(ch, book.title)
-        print(f"\n{len(Book.objects())} books\n")
+        print(f"\n{len(books)} books\n")
 
 
 
@@ -199,11 +199,13 @@ def main():
     menu = """
     Commands:
         add [a]
+        drop-collection [d]
+        extract [e]
         find-one [f]
         find [s]
         list [l]
         import [i]
-        sql [sql]
+        sql import [sql]
         update images [u]
     > """
     result = None
@@ -212,6 +214,10 @@ def main():
             action = input(menu)
             if action == 'a':
                 bib.add_book()
+            if action == 'd':
+                Book.drop_collection()
+            if action == 'e':
+                import extract_images
             if action == 'f':
                 result = bib.find_book(first=True)
             if action == 's':
@@ -220,13 +226,12 @@ def main():
                 bib.list_books()
             if action == 'i':
                 books = bib.import_csv()
-                breakpoint()
             if action == 'sql':
                 sql_file = f'{dbname}/My Library/mylibrary.db'
                 books = bib.import_sql(sql_file)
                 print(len(books))
-            if action == 'save':
-                bib.save_books(books)
+                if (answer := input('save? [y]')) == 'y':
+                    bib.save_books(books)
             if action == 'u':
                 bib.update_images()
     except EOFError:
