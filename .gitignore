@@ -9,3 +9,4 @@ img
 *.db
 *.log
 fabfile.py
+vahtras
