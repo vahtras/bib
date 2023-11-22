@@ -79,7 +79,7 @@ class Bib():
     def list_books(self, books=None):
         print(f"Listing of {Book._collection}")
         if books is None:
-            books = Book.objects()
+            books = Book.objects.order_by('title')
         for book in books:
             ch = "\U0001F4F7" if book.image else "X"
             print(ch, book.title)
