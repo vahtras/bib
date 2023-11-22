@@ -7,7 +7,8 @@ import sys
 import dotenv
 import mongoengine
 
-from models import Author, Book
+from .models import Author, Book
+from .extract_images import extract
 
 dotenv.load_dotenv()
 
@@ -217,7 +218,7 @@ def main():
             if action == 'd':
                 Book.drop_collection()
             if action == 'e':
-                import extract_images
+                extract()
             if action == 'f':
                 result = bib.find_book(first=True)
             if action == 's':

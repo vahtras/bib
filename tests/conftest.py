@@ -3,7 +3,7 @@ import mongomock
 import mongomock.gridfs
 import pytest
 
-import program
+from app import program
 
 @pytest.fixture(scope='session')
 def connection():

@@ -7,7 +7,7 @@ from mongoengine import (
     fields,
 )
 
-import hashcode
+from . import hashcode
 
 SUBTITLE_SEPARATOR = ":"
 

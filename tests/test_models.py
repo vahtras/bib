@@ -1,6 +1,6 @@
 import pytest
 
-from models import Author, Book
+from app.models import Author, Book
 
 
 def test_create_book_with_only_title():

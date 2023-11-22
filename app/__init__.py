@@ -6,7 +6,7 @@ import dotenv
 import flask
 import mongoengine
 
-from models import Book
+from .models import Book
 
 dotenv.load_dotenv()
 dbname = os.environ.get('MYLIB')
