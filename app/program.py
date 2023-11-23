@@ -79,10 +79,10 @@ class Bib():
     def list_books(self, books=None):
         print(f"Listing of {Book._collection}")
         if books is None:
-            books = Book.objects.order_by('title')
+            books = Book.objects.order_by('hylla', 'authors.0.last', 'title')
         for book in books:
             ch = "\U0001F4F7" if book.image else "X"
-            print(ch, book.title)
+            print(f'{book.hylla} {ch} {book.authors[0].last}: {book.title}')
         print(f"\n{len(books)} books\n")
 
 

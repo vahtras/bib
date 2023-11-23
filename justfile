@@ -1,6 +1,9 @@
 limit := env_var_or_default('LIMIT', '-10')
 mylib := env_var('MYLIB')
 
+default:
+    @just --list
+
 extract:
     python -m app.extract_images
 
@@ -24,3 +27,6 @@ mg:
 op:
     cd /tmp && for i in $(ls -t *.jpg | head {{limit}}); do open $i; done
 min: ls mv mg op
+
+upload:
+    scp -v vahtras/My\ Library/mylibrary.db jussi:/home/www/sites/lib.vahtras.se/src/vahtras/My\\\ Library
