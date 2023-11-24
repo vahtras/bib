@@ -4,6 +4,9 @@ mylib := env_var('MYLIB')
 default:
     @just --list
 
+download:
+    mv ~/Downloads/mylibrary.db vahtras/My\\\ Library
+    mv ~/Downloads/MyLibraryImages.txt vahtras/My\\\ Library
 extract:
     python -m app.extract_images
 
