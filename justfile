@@ -34,5 +34,8 @@ min: ls mv mg op
 push:
     git push lib.vahtras.se main
 
+reload:
+    ssh jussi sudo -S supervisorctl restart lib.vahtras.se
+
 upload:
     scp -v vahtras/My\ Library/mylibrary.db jussi:/home/www/sites/lib.vahtras.se/src/vahtras/My\\\ Library
