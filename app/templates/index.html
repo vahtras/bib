@@ -3,6 +3,13 @@
 {{ super() }}
 <h1 class="fam">Fam Vahtras bibliotek</h1>
 
+<form action="" method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.title.label }}<br>
+    {{ form.title }}<br>
+</form>
+
+{% if books %}
 <table class="table table-striped" id="data">
     <thead>
         <tr>
@@ -25,4 +32,8 @@
         </tr>
 {% endfor %}
     </tbody>
+</table>
+{% endif %}
+
 {% endblock %}
+
