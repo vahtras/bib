@@ -13,17 +13,11 @@
       <h2>{{ title }}</h2>
       {% block content %}
       <hr>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <ul class="navbar-nav mr-auto">
-              {% for sheet_name in htmls %}
-              {% if sheet_name == tab %}
-              <li class="nav-item"><a class="nav-link active" aria-current="page" href="/{{ sheet_name }}">{{ sheet_name }}</a></li>
-              {% else %}
-              <li class="nav-item"><a class="nav-link" href="/{{ sheet_name }}">{{ sheet_name }}</a></li>
-              {% endif %}
-              {% endfor %}
-          </ul>
-      </nav>
+    <div class="col-md-12">
+        <center>
+        <img class="img-responsive" src="/static/th-2240798387.jpeg" >
+        </center>
+    </div>
       <hr>
       {% endblock %}
     </div>
