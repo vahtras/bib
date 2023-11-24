@@ -31,5 +31,8 @@ op:
     cd /tmp && for i in $(ls -t *.jpg | head {{limit}}); do open $i; done
 min: ls mv mg op
 
+push:
+    git push lib.vahtras.se main
+
 upload:
     scp -v vahtras/My\ Library/mylibrary.db jussi:/home/www/sites/lib.vahtras.se/src/vahtras/My\\\ Library
