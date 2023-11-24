@@ -7,7 +7,7 @@ import dotenv
 import flask
 import mongoengine
 from flask_wtf import FlaskForm
-from wtforms import StringField
+from wtforms import StringField, SubmitField
 
 from .models import Book
 from config import Config
@@ -21,6 +21,8 @@ app.config.from_object(Config)
 
 class SearchForm(FlaskForm):
     title = StringField('Titel', validators=[])
+    author = StringField('Författare', validators=[])
+    submit = SubmitField()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -29,8 +31,9 @@ def index():
     if form.validate_on_submit():
         patterns = dict(
             title=re.compile(form.title.data, re.IGNORECASE),
+            authors__0__last=re.compile(form.author.data, re.IGNORECASE),
         )
-        print(patterns)
+        app.logger.info(patterns)
         books = Book.objects(**patterns)
     return flask.render_template(
         'index.html', form=form, books=books, encode=base64.b64encode

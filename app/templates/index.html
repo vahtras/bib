@@ -5,8 +5,17 @@
 
 <form action="" method="POST">
     {{ form.hidden_tag() }}
-    {{ form.title.label }}<br>
-    {{ form.title }}<br>
+    <div class="row">
+        <div class="col-md-3">
+    {{ form.title.label }} {{ form.title }}
+        </div>
+        <div class="col-md-3">
+    {{ form.author.label }} {{ form.author }}
+        </div>
+        <div class="col-md-3">
+        <button type="submit" class="btn btn-light">OK</button>
+        </div>
+    </div>
 </form>
 
 {% if books %}
