@@ -5,21 +5,19 @@
 
 <form action="" method="POST">
     {{ form.hidden_tag() }}
-    <div class="row">
-        <div class="col-md-3">
-    {{ form.title.label }} {{ form.title }}
-        </div>
-        <div class="col-md-3">
-    {{ form.author.label }} {{ form.author }}
-        </div>
-        <div class="col-md-3">
-        <button type="submit" class="btn btn-light">OK</button>
-        </div>
+    <div class="mb3 col-md-3">
+        {{ form.title.label(class='form-label') }}
+        {{ form.title(class='form-control') }}
     </div>
+    <div class="mb3 col-md-3">
+        {{ form.author.label(class='form-label') }}
+        {{ form.author(class='form-control') }}
+    </div>
+    <button type="submit" class="btn btn-light">Sök</button>
 </form>
 
 {% if books %}
-<table class="table table-striped" id="data">
+<table class="table table-striped" id="nodata">
     <thead>
         <tr>
             <th>📷</th><th>Författare</th><th>Titel</th><th>Hylla</th>
