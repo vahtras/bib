@@ -20,8 +20,8 @@ app = flask.Flask(__name__)
 app.config.from_object(Config)
 
 class SearchForm(FlaskForm):
-    title = StringField('title', validators=[])
-    author = StringField('author', validators=[])
+    title = StringField('Titel', validators=[])
+    author = StringField('Författare', validators=[])
     submit = SubmitField()
 
 @app.route('/', methods=['GET', 'POST'])
