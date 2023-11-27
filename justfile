@@ -40,4 +40,5 @@ reload:
     ssh jussi sudo -S supervisorctl restart lib.vahtras.se
 
 upload:
-    scp -v vahtras/My\ Library/mylibrary.db jussi:/home/www/sites/lib.vahtras.se/src/vahtras/My\\\ Library
+    scp vahtras/My\ Library/mylibrary.db jussi:/home/www/sites/lib.vahtras.se/src/vahtras/My\\\ Library
+    scp vahtras/My\ Library/MyLibraryImages.txt jussi:/home/www/sites/lib.vahtras.se/src/vahtras/My\\\ Library

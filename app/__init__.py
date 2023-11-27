@@ -33,8 +33,11 @@ def index():
         patterns = dict(
             title=re.compile(form.title.data, re.IGNORECASE),
             authors__0__last=re.compile(form.author.data, re.IGNORECASE),
-            series__title=re.compile(form.series.data, re.IGNORECASE),
+            #series__title=re.compile(form.series.data, re.IGNORECASE),
         )
+        if form.series.data:
+            patterns['series__title'] = re.compile(form.series.data, re.IGNORECASE)
+
         app.logger.info(patterns)
         books = Book.objects(**patterns)
     return flask.render_template(
