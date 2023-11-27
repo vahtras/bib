@@ -16,6 +16,9 @@
         {{ form.title(class='form-control', placeholder="Titel") }}
     </div>
     <div class="col">
+        {{ form.series(class='form-control', placeholder="Serie") }}
+    </div>
+    <div class="col">
     <button type="submit" class="btn btn-light">Sök</button>
     </div>
     </div>
@@ -25,7 +28,7 @@
 <table class="table table-striped" id="data">
     <thead>
         <tr>
-            <th>📷</th><th>Författare</th><th>Titel</th><th>Hylla</th>
+            <th>📷</th><th>Författare</th><th>Titel</th><th>Serie</th><th>Hylla</th>
         </tr>
     </thead>
     <tbody>
@@ -41,6 +44,11 @@
                 <i>{{ book.title.split(':')[0] }}</i><br>
                 {% if ':' in book.title %}
                     <i><small>{{ book.title.split(':')[1] }}</small></i>
+                {% endif %}
+            </td>
+            <td>
+                {% if book.series %}
+                    {{ book.series.title }} {{ book.series.volume }}
                 {% endif %}
             </td>
             <td>

@@ -7,7 +7,7 @@ import sys
 import dotenv
 import mongoengine
 
-from .models import Author, Book
+from .models import Author, Book, Series
 from .extract_images import extract
 
 dotenv.load_dotenv()
@@ -166,10 +166,10 @@ class Bib():
         with sqlite3.connect(dbname) as connection:
             cursor = connection.cursor()
             result = cursor.execute(
-                "SELECT TITLE,AUTHOR,ADDITIONAL_AUTHORS, COMMENTS FROM BOOK;"
+                "SELECT TITLE,AUTHOR,ADDITIONAL_AUTHORS,SERIES,COMMENTS FROM BOOK;"
             )
 
-            for title, author_id, other_ids, comments in result:
+            for title, author_id, other_ids, series, comments in result:
                 author_ids = [author_id]
                 if other_ids:
                     if (oids := other_ids.strip('[]')):
@@ -185,6 +185,12 @@ class Bib():
                             break
                 book = Book(title=title, authors=authors, hylla=hylla)
                 books.append(book)
+                if series:
+                    series = json.loads(series)[0]
+                    book.series = Series(
+                        title=series['title'],
+                        volume=series['volume']
+                    )
 
         return books
 

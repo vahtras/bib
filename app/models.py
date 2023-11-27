@@ -2,6 +2,7 @@ from mongoengine import (
     Document,
     EmbeddedDocument,
     EmbeddedDocumentField,
+    IntField,
     ListField,
     StringField,
     fields,
@@ -42,11 +43,15 @@ class Author(EmbeddedDocument):
             return Author(first=first, last=last)
         breakpoint()
 
+class Series(EmbeddedDocument):
+    title = StringField(required=True)
+    volume = IntField(required=False)
 
 class Book(Document):
     title = StringField(required=True)
     authors = ListField(EmbeddedDocumentField(Author))
     image = fields.ImageField(thumbnail_size=(100, 70, False))
+    series = EmbeddedDocumentField(Series)
     hylla = StringField()
     meta = {'collection': 'books'}
 
