@@ -29,6 +29,7 @@
   <script>
     $(document).ready(function () {
         $('#data').DataTable({
+            searching: false,
             order: [[1, 'asc']],
             columns: [
                 {orderable: false, searchable: false},

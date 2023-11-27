@@ -7,6 +7,7 @@ default:
 download:
     mv ~/Downloads/mylibrary.db vahtras/My\\\ Library
     mv ~/Downloads/MyLibraryImages.txt vahtras/My\\\ Library
+
 extract:
     rm vahtras/img/*.jpg
     python -m app.extract_images
