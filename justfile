@@ -4,6 +4,9 @@ mylib := env_var('MYLIB')
 default:
     @just --list
 
+list:
+    python -c "from app.program import Bib; Bib('vahtras').list_books()"
+
 download:
     mv ~/Downloads/mylibrary.db vahtras/My\\\ Library
     mv ~/Downloads/MyLibraryImages.txt vahtras/My\\\ Library
@@ -12,16 +15,16 @@ extract:
     rm vahtras/img/*.jpg
     python -m app.extract_images
 
-import:
+import-db:
     python -c "from app.program import Book, Bib; Book.drop_collection(); bib = Bib('vahtras'); bib.save_books(bib.import_sql('vahtras/My Library/mylibrary.db'))"
 
-list:
-    python -c "from app.program import Bib; Bib('vahtras').list_books()"
 
-update:
+import-img:
     python -c "from app.program import Bib; Bib('vahtras').update_images()"
 
-ls:
+import: import-db import-img
+
+head:
     ls -s "{{mylib}}/img" | sort -nr | head {{limit}}
 
 mv:
@@ -31,7 +34,7 @@ mg:
     cd /tmp && mogrify -resize 777x777 $(ls -t *.jpg | head {{limit}})
 op:
     cd /tmp && for i in $(ls -t *.jpg | head {{limit}}); do open $i; done
-min: ls mv mg op
+min: mv mg op
 
 push:
     git push lib.vahtras.se main
