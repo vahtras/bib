@@ -31,12 +31,24 @@ def index():
     books = []
     if form.validate_on_submit():
         patterns = dict(
-            title=re.compile(form.title.data, re.IGNORECASE),
-            authors__0__last=re.compile(form.author.data, re.IGNORECASE),
-            #series__title=re.compile(form.series.data, re.IGNORECASE),
+            title=re.compile(form.title.data.strip(), re.IGNORECASE),
         )
+
+        if "," in form.author.data:
+            last, first = (_.strip() for _ in form.author.data.split(','))
+        else:
+            last = form.author.data.strip()
+            first = ""
+
+        patterns.update(dict(
+            authors__0__last=re.compile(last, re.IGNORECASE),
+            authors__0__first=re.compile(first, re.IGNORECASE),
+            ))
+
         if form.series.data:
-            patterns['series__title'] = re.compile(form.series.data, re.IGNORECASE)
+            patterns.update(dict(
+                series__title=re.compile(form.series.data.strip(), re.IGNORECASE)
+            ))
 
         app.logger.info(patterns)
         books = Book.objects(**patterns)
