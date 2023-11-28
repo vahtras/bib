@@ -40,10 +40,12 @@ def index():
             last = form.author.data.strip()
             first = ""
 
-        patterns.update(dict(
-            authors__0__last=re.compile(last, re.IGNORECASE),
-            authors__0__first=re.compile(first, re.IGNORECASE),
-            ))
+        last = re.compile(last, re.IGNORECASE)
+        first = re.compile(first, re.IGNORECASE)
+        author_pattern = dict(
+            __raw__={"authors": { "$elemMatch": {"last": last, "first": first}}}
+        )
+        patterns.update(author_pattern)
 
         if form.series.data:
             patterns.update(dict(

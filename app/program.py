@@ -82,7 +82,10 @@ class Bib():
             books = Book.objects.order_by('hylla', 'authors.0.last', 'title')
         for book in books:
             ch = "\U0001F4F7" if book.image else "X"
-            print(f'{book.hylla} {ch} {book.authors[0].last}: {book.title}')
+            if book.authors:
+                print(f'{book.hylla} {ch} {book.authors[0].last}: {book.title}')
+            else:
+                print(f'{book.hylla} {ch} {book.title}')
         print(f"\n{len(books)} books\n")
 
 
