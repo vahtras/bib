@@ -52,7 +52,11 @@
             </td>
             <td>
                 {% if book.series %}
-                {{ book.series.title }} {{ "%2d" % book.series.volume }}
+                    {% if book.series.volume %}
+                        {{ book.series.title }} {{ "%2d" % book.series.volume }}
+                    {% else %}
+                        {{ book.series.title }}
+                    {% endif %}
                 {% endif %}
             </td>
             <td>
