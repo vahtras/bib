@@ -3,7 +3,7 @@ import mongomock
 import mongomock.gridfs
 import pytest
 
-from app import program
+from app import models
 
 @pytest.fixture(scope='session')
 def connection():
@@ -19,6 +19,6 @@ def connection():
 
 @pytest.fixture
 def bib(connection):
-    bib = program.Bib()
+    bib = models.Bib()
     bib.connection = connection
     yield bib

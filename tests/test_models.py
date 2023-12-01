@@ -53,7 +53,7 @@ def test_book_to_db(mongodb, bib):
     book = Book(title='Foo')
     book.save()
 
-    new = Book.objects().first()
+    new = Book.objects(title='Foo').first()
     assert new.title == 'Foo'
 
 def test_hylla_to_db(mongodb, bib):

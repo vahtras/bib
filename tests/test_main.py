@@ -6,7 +6,7 @@ import sqlite3
 from app.models import Book, Author
 
 def test_add_no_authors(bib):
-    with patch('app.program.input') as mock_input:
+    with patch('app.models.input') as mock_input:
         mock_input.side_effect = EOFError
         authors = bib.add_authors()
 
@@ -14,7 +14,7 @@ def test_add_no_authors(bib):
 
 
 def test_add_one_authors(bib):
-    with patch('app.program.input') as mock_input:
+    with patch('app.models.input') as mock_input:
         mock_input.side_effect = ["foo, bar", EOFError]
         authors = bib.add_authors()
 
@@ -24,7 +24,7 @@ def test_add_one_authors(bib):
 
 
 def test_add_two_authors(bib):
-    with patch('app.program.input') as mock_input:
+    with patch('app.models.input') as mock_input:
         mock_input.side_effect = ["foo, bar", "baz, boo", EOFError]
         authors = bib.add_authors()
 
@@ -79,7 +79,7 @@ def test_find_book(search_title, expected_title, matches, bib):
     book = Book(title=expected_title)
     book.save()
 
-    with patch('app.program.input') as mock_input:
+    with patch('app.models.input') as mock_input:
         mock_input.side_effect = [search_title, EOFError]
         books = bib.find_book()
 
@@ -94,7 +94,7 @@ def test_import_csv_new(bib):
 Purge,"Oksanen, Sofi",
 """
     )
-    with patch('app.program.input') as mock_input:
+    with patch('app.models.input') as mock_input:
         mock_input.side_effect = ["y", EOFError]
         books = bib.import_csv(finp)
 
@@ -111,7 +111,7 @@ Purge,"Oksanen, Sofi",
     )
     Book.drop_collection()
     Book(title='Purged').save()
-    with patch('app.program.input') as mock_input:
+    with patch('app.models.input') as mock_input:
         mock_input.side_effect = ["y", "y", EOFError]
         books = bib.import_csv(finp)
 
