@@ -5,7 +5,7 @@ default:
     @just --list
 
 list:
-    python -c "from app.program import Bib; Bib('vahtras').list_books()"
+    python -c "from app.models import Bib; Bib('vahtras').list_books()"
 
 download:
     mv ~/Downloads/mylibrary.db vahtras/My\\\ Library
@@ -16,11 +16,11 @@ extract:
     python -m app.extract_images
 
 import-db:
-    python -c "from app.program import Book, Bib; Book.drop_collection(); bib = Bib('vahtras'); bib.save_books(bib.import_sql('vahtras/My Library/mylibrary.db'))"
+    python -c "from app.models import Book, Bib; Book.drop_collection(); bib = Bib('vahtras'); bib.save_books(bib.import_sql('vahtras/My Library/mylibrary.db'))"
 
 
 import-img:
-    python -c "from app.program import Bib; Bib('vahtras').update_images()"
+    python -c "from app.models import Bib; Bib('vahtras').update_images()"
 
 import: import-db import-img
 
