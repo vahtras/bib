@@ -1,8 +1,7 @@
 import os
 import sys
 
-from .program import Bib
-from .models import Book
+from .models import Book, Bib
 from .extract_images import extract
 
 def main():

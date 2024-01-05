@@ -27,8 +27,8 @@ def index():
                 first = ""
 
             last = re.compile(last, re.IGNORECASE)
-            first = re.compile(first, re.IGNORECASE)
             if first:
+                first = re.compile(first, re.IGNORECASE)
                 author_pattern = dict(
                     __raw__={"authors": { "$elemMatch": {"last": last, "first": first}}}
                 )
@@ -44,7 +44,7 @@ def index():
                 series__title=re.compile(form.series.data.strip(), re.IGNORECASE)
             ))
 
-        app.logger.info(patterns)
+        app.logger.warn(patterns)
         books = Book.objects(**patterns)
     return flask.render_template(
         'index.html', form=form, books=books, encode=base64.b64encode

@@ -8,11 +8,10 @@ list:
     python -c "from app.models import Bib; Bib('vahtras').list_books()"
 
 download:
-    mv ~/Downloads/mylibrary.db vahtras/My\\\ Library
-    mv ~/Downloads/MyLibraryImages.txt vahtras/My\\\ Library
+    python quickstart.py
 
 extract:
-    rm vahtras/img/*.jpg
+    rm -f vahtras/img/*.jpg
     python -m app.extract_images
 
 import-db:
@@ -25,13 +24,16 @@ import-img:
 import: import-db import-img
 
 head:
-    ls -s "{{mylib}}/img" | sort -nr | head {{limit}}
+    ls -s {{mylib}}/img/*.jpg | sort -nr | head {{limit}}
 
 mv:
     for img in $(ls -s {{mylib}}/img | sort -nr | head {{limit}} | cut -d " " -f 2); do mv -v {{mylib}}/img/$img /tmp; touch /tmp/$img; done
 
 mg:
     cd /tmp && mogrify -resize 777x777 $(ls -t *.jpg | head {{limit}})
+mgi:
+    cd "{{mylib}}/img" && mogrify -resize 777x777 $(ls -s *.jpg | sort -nr | head {{limit}} | sed "s/^ //" | cut -d " " -f 2)
+# ╰─$ ls -s *.jpg | sort -nr | head | sed "s/^ //" | cut -d " " -f 2
 op:
     cd /tmp && for i in $(ls -t *.jpg | head {{limit}}); do open $i; done
 min: mv mg op

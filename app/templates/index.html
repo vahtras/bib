@@ -41,7 +41,11 @@
             </td>
             <td> 
                 {% for author in book.authors %}
+                {% if author.first %}
                     {{ author.last }}, {{ author.first }}<br>
+                {% else %}
+                    {{ author.last }}<br>
+                {% endif %}
                 {% endfor %}
             </td>
             <td>
