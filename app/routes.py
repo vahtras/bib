@@ -6,6 +6,7 @@ import flask
 from . import app
 from .forms import SearchForm
 from .models import Book
+from . import download
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -58,3 +59,8 @@ def start():
         filters['authors__0__last'] = flask.request.args['last']
     books = Book.objects(**filters)
     return flask.render_template('start.html', books=books, encode=base64.b64encode)
+
+@app.route('/download')
+def _download():
+    download.main()
+    return flask.redirect('/')
