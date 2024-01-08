@@ -62,5 +62,5 @@ def start():
 
 @app.route('/download')
 def _download():
-    download.main()
+    download.bg()
     return flask.redirect('/')
