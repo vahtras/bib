@@ -12,6 +12,7 @@ from mongoengine import (
     fields,
     register_connection,
 )
+from tqdm import tqdm
 
 from . import hashcode
 
@@ -233,14 +234,20 @@ class Bib():
                 breakpoint()
 
     def update_images(self):
-        for book in Book.objects():
+        missing = []
+
+        for book in tqdm(Book.objects(), desc='Update images'):
             filename = f'{self.dbname}/img/image_{book.hash()}.jpg'
             try:
                 with open(filename, 'rb') as img:
                     book.image.replace(img)
                     book.save()
             except FileNotFoundError:
-                print(book)
+                missing.append(book)
+
+        print("\nMissing:\n")
+        for book in missing:
+            print(book)
 
     def import_sql(self, dbname: str) -> list[Book]:
         """
