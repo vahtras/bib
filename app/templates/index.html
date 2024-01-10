@@ -1,4 +1,10 @@
 {% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
+{% endblock %}
+
 {% block content %}
 {{ super() }}
 
@@ -72,5 +78,24 @@
 </table>
 {% endif %}
 
+{% block scripts %}
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+      <script>
+         $(document).ready(function () {
+           $('#data').DataTable({
+               searching: false,
+               order: [[1, 'asc']],
+               columns: [
+                   {orderable: false, searchable: false},
+                   {orderable: true, searchable: true},
+                   {orderable: true, searchable: true},
+                   {orderable: true, searchable: true},
+                   {orderable: true, searchable: true},
+               ]
+           });
+         });
+      </script>
+{% endblock %}
 {% endblock %}
 

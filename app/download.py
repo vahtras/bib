@@ -11,14 +11,14 @@ class DownloadThread(threading.Thread):
 
 
 def main():
-    quickstart.main()
+    #quickstart.main()
     extract_images.extract()
-    Book.drop_collection()
-    bib = Bib(MYLIB)
-    bib.save_books(
-        bib.import_sql(f'{MYLIB}/My Library/mylibrary.db')
-    )
-    bib.update_images()
+    #Book.drop_collection()
+    #bib = Bib(MYLIB)
+    #bib.save_books(
+    #    bib.import_sql(f'{MYLIB}/My Library/mylibrary.db')
+    #)
+    #bib.update_images()
 
 def bg():
     dt = DownloadThread(target=main, daemon=True)

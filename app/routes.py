@@ -1,5 +1,6 @@
 import base64
 import re
+import time
 
 import flask
 
@@ -62,5 +63,16 @@ def start():
 
 @app.route('/download')
 def _download():
-    download.bg()
-    return flask.redirect('/')
+    # download.bg()
+    return flask.render_template('download.html')
+
+@app.route('/progress')
+def progress():
+    def generate():
+        x = 0
+        while x <= 100:
+            yield "data:" + str(x) + "\n\n"
+            time.sleep(1)
+            x += 25
+
+    return flask.Response(generate(), mimetype="text/event-stream")
