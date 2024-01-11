@@ -13,7 +13,7 @@
 {% block scripts %}
 {{ super() }}
         <script>
-        var source = new EventSource("/progress");
+        var source = new EventSource("/extract-progress");
         source.onmessage = function(event) {
             $('.progress').attr('aria-valuenow', event.data);
             $('.progress-bar').css('width', event.data+'%');

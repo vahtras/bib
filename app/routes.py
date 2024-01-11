@@ -1,5 +1,6 @@
 import base64
 import re
+import os
 import time
 
 import flask
@@ -8,6 +9,8 @@ from . import app
 from .forms import SearchForm
 from .models import Book
 from . import download
+from . import extract_images
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -63,7 +66,7 @@ def start():
 
 @app.route('/download')
 def _download():
-    # download.bg()
+    download.bg()
     return flask.render_template('download.html')
 
 @app.route('/progress')
@@ -74,5 +77,18 @@ def progress():
             yield "data:" + str(x) + "\n\n"
             time.sleep(1)
             x += 25
+
+    return flask.Response(generate(), mimetype="text/event-stream")
+
+@app.route('/extract-progress')
+def extract_progress():
+    def generate():
+        total = extract_images.unique()
+        n = 0
+        while n < total:
+            n = len(list(os.scandir('vahtras/img')))
+            x = round(100*n/total)
+            yield "data:" + str(x) + "\n\n"
+        yield "data:" + str(100) + "\n\n"
 
     return flask.Response(generate(), mimetype="text/event-stream")

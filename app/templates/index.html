@@ -6,79 +6,80 @@
 {% endblock %}
 
 {% block content %}
-{{ super() }}
+    {{ super() }}
 
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="row">
+        <div class="col">
+            <!--{{ form.author.label(class='form-label') }}-->
+            {{ form.author(class='form-control', placeholder='Författare') }}
+            <div id="authorHelp" class="form-text">Efternamn, Förnamn</div>
+        </div>
+        <div class="col">
+            <!--{{ form.title.label(class='form-label') }}-->
+            {{ form.title(class='form-control', placeholder="Titel") }}
+        </div>
+        <div class="col">
+            {{ form.series(class='form-control', placeholder="Serie") }}
+        </div>
+        <div class="col">
+        <button type="submit" class="btn btn-primary">Sök</button>
+        </div>
+        </div>
+    </form>
 
-<form action="" method="POST">
-    {{ form.hidden_tag() }}
-    <div class="row">
-    <div class="col">
-        <!--{{ form.author.label(class='form-label') }}-->
-        {{ form.author(class='form-control', placeholder='Författare') }}
-        <div id="authorHelp" class="form-text">Efternamn, Förnamn</div>
-    </div>
-    <div class="col">
-        <!--{{ form.title.label(class='form-label') }}-->
-        {{ form.title(class='form-control', placeholder="Titel") }}
-    </div>
-    <div class="col">
-        {{ form.series(class='form-control', placeholder="Serie") }}
-    </div>
-    <div class="col">
-    <button type="submit" class="btn btn-primary">Sök</button>
-    </div>
-    </div>
-</form>
-
-{% if books %}
-<table class="table table-striped" id="data">
-    <thead>
-        <tr>
-            <th>📷</th><th>Författare</th><th>Titel</th><th>Serie</th><th>Hylla</th>
-        </tr>
-    </thead>
-    <tbody>
-{% for book in books %}
-        <tr>
-            <td>
-    {% if book.image %}
-    <img src="data:image/jpeg;base64,{{ encode(book.image.thumbnail.read()).decode() }}">
-    {% endif %}
-            </td>
-            <td> 
-                {% for author in book.authors %}
-                {% if author.first %}
-                    {{ author.last }}, {{ author.first }}<br>
-                {% else %}
-                    {{ author.last }}<br>
-                {% endif %}
-                {% endfor %}
-            </td>
-            <td>
-                <i>{{ book.title.split(':')[0] }}</i><br>
-                {% if ':' in book.title %}
-                    <i><small>{{ book.title.split(':')[1] }}</small></i>
-                {% endif %}
-            </td>
-            <td>
-                {% if book.series %}
-                    {% if book.series.volume %}
-                        {{ book.series.title }} {{ "%2d" % book.series.volume }}
+    {% if books %}
+    <table class="table table-striped" id="data">
+        <thead>
+            <tr>
+                <th>📷</th><th>Författare</th><th>Titel</th><th>Serie</th><th>Hylla</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for book in books %}
+            <tr>
+                <td>
+        {% if book.image %}
+        <img src="data:image/jpeg;base64,{{ encode(book.image.thumbnail.read()).decode() }}">
+        {% endif %}
+                </td>
+                <td> 
+                    {% for author in book.authors %}
+                    {% if author.first %}
+                        {{ author.last }}, {{ author.first }}<br>
                     {% else %}
-                        {{ book.series.title }}
+                        {{ author.last }}<br>
                     {% endif %}
-                {% endif %}
-            </td>
-            <td>
-                {% if book.hylla %}{{ book.hylla }}{% endif %}
-            </td>
-        </tr>
-{% endfor %}
-    </tbody>
-</table>
-{% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <i>{{ book.title.split(':')[0] }}</i><br>
+                    {% if ':' in book.title %}
+                        <i><small>{{ book.title.split(':')[1] }}</small></i>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if book.series %}
+                        {% if book.series.volume %}
+                            {{ book.series.title }} {{ "%2d" % book.series.volume }}
+                        {% else %}
+                            {{ book.series.title }}
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if book.hylla %}{{ book.hylla }}{% endif %}
+                </td>
+            </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}
 
 {% block scripts %}
+    {{ super() }}
       <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
       <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
       <script>
@@ -96,6 +97,5 @@
            });
          });
       </script>
-{% endblock %}
 {% endblock %}
 
