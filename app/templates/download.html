@@ -15,11 +15,12 @@
         <script>
         var source = new EventSource("/extract-progress");
         source.onmessage = function(event) {
-            $('.progress').attr('aria-valuenow', event.data);
-            $('.progress-bar').css('width', event.data+'%');
-            $('.progress-bar-label').text(event.data+'%');
+            sent_data = JSON.parse(event.data)
+            $('.progress').attr('aria-valuenow', sent_data["ext"]);
+            $('.progress-bar').css('width', sent_data["ext"]+'%');
+            $('.progress-bar-label').text(sent_data["ext"]+'%');
 
-            if(event.data == 100){
+            if(sent_data["ext"] == 100){
                 source.close()
             }
         }

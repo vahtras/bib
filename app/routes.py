@@ -1,4 +1,5 @@
 import base64
+import json
 import re
 import os
 import time
@@ -87,8 +88,8 @@ def extract_progress():
         n = 0
         while n < total:
             n = len(list(os.scandir('vahtras/img')))
-            x = round(100*n/total)
-            yield "data:" + str(x) + "\n\n"
-        yield "data:" + str(100) + "\n\n"
+            x = {"ext": round(100*n/total)}
+            yield "data:" + json.dumps(x) + "\n\n"
+        # yield "data:" + str(100) + "\n\n"
 
     return flask.Response(generate(), mimetype="text/event-stream")

@@ -30,13 +30,11 @@ mv:
     for img in $(ls -s {{mylib}}/img | sort -nr | head {{limit}} | cut -d " " -f 2); do mv -v {{mylib}}/img/$img /tmp; touch /tmp/$img; done
 
 mg:
-    cd /tmp && mogrify -resize 777x777 $(ls -t *.jpg | head {{limit}})
-mgi:
-    cd "{{mylib}}/img" && mogrify -resize 777x777 $(ls -s *.jpg | sort -nr | head {{limit}} | sed "s/^ //" | cut -d " " -f 2)
-# ╰─$ ls -s *.jpg | sort -nr | head | sed "s/^ //" | cut -d " " -f 2
+    cd /tmp && mogrify -resize 200x350 $(ls -t *.jpg | head {{limit}}) && ls -st | head {{limit}}
+
 op:
     cd /tmp && for i in $(ls -t *.jpg | head {{limit}}); do open $i; done
-min: mv mg op
+min: mv mg
 
 push:
     git push lib.vahtras.se main
