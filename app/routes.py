@@ -90,7 +90,6 @@ def extract_progress():
         while x["ext"] < 100:
             n = len(list(os.scandir('vahtras/img')))
             x["ext"] = round(100*n/total)
-            print(x)
             yield "data:" + json.dumps(x) + "\n\n"
 
         while len(Book.objects) == 0:
@@ -98,7 +97,6 @@ def extract_progress():
 
         while x["imp"] < 100:
             x["imp"] = round(100*Book.count/len(Book.objects))
-            print(x)
             yield "data:" + json.dumps(x) + "\n\n"
             time.sleep(.1)
 
