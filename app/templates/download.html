@@ -2,10 +2,10 @@
 
 {% block content %}
 {{ super() }}
-        <div class="progress" role="progressbar" aria-label="foo" aria-valuenow="0"
+        <div id="ext" class="progress" role="progressbar" aria-label="foo" aria-valuenow="0"
             aria-valuemin="0" aria-valuemax="100" style="margin: 50px;">
-            <div class="progress-bar active" style="width: 0%">
-                <span class="progress-bar-label">0%</span>
+            <div id="ext-bar" class="progress-bar active" style="width: 0%">
+                <span id="ext-bar-label" class="progress-bar-label">0%</span>
             </div>
         </div>
 {% endblock %}
@@ -16,9 +16,9 @@
         var source = new EventSource("/extract-progress");
         source.onmessage = function(event) {
             sent_data = JSON.parse(event.data)
-            $('.progress').attr('aria-valuenow', sent_data["ext"]);
-            $('.progress-bar').css('width', sent_data["ext"]+'%');
-            $('.progress-bar-label').text(sent_data["ext"]+'%');
+            $('#ext').attr('aria-valuenow', sent_data["ext"]);
+            $('#ext-bar').css('width', sent_data["ext"]+'%');
+            $('#ext-bar-label').text(sent_data["ext"]+'%');
 
             if(sent_data["ext"] == 100){
                 source.close()
