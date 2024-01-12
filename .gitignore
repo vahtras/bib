@@ -10,3 +10,4 @@ img
 *.log
 fabfile.py
 vahtras
+*.json

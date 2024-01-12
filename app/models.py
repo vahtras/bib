@@ -60,6 +60,7 @@ class Book(Document):
     series = EmbeddedDocumentField(Series)
     hylla = StringField()
     meta = {'collection': 'books'}
+    count = 0
 
     def __repr__(self):
         return f'Book(title="{self.title}")'
@@ -236,7 +237,7 @@ class Bib():
     def update_images(self):
         missing = []
 
-        for book in tqdm(Book.objects(), desc='Update images'):
+        for Book.count, book in enumerate(tqdm(Book.objects(), desc='Update images')):
             filename = f'{self.dbname}/img/image_{book.hash()}.jpg'
             try:
                 with open(filename, 'rb') as img:

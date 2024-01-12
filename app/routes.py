@@ -1,4 +1,5 @@
 import base64
+from collections import defaultdict
 import json
 import re
 import os
@@ -85,11 +86,20 @@ def progress():
 def extract_progress():
     def generate():
         total = extract_images.unique()
-        n = 0
-        while n < total:
+        x = defaultdict(int)
+        while x["ext"] < 100:
             n = len(list(os.scandir('vahtras/img')))
-            x = {"ext": round(100*n/total)}
+            x["ext"] = round(100*n/total)
+            print(x)
             yield "data:" + json.dumps(x) + "\n\n"
-        # yield "data:" + str(100) + "\n\n"
+
+        while len(Book.objects) == 0:
+            time.sleep(1)
+
+        while x["imp"] < 100:
+            x["imp"] = round(100*Book.count/len(Book.objects))
+            print(x)
+            yield "data:" + json.dumps(x) + "\n\n"
+            time.sleep(.1)
 
     return flask.Response(generate(), mimetype="text/event-stream")
