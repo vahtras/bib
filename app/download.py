@@ -11,7 +11,7 @@ class DownloadThread(threading.Thread):
 
 
 def main():
-    # quickstart.main()
+    quickstart.main()
     extract_images.extract_images_to_file()
     Book.drop_collection()
     bib = Bib(MYLIB)
