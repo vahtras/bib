@@ -1,6 +1,7 @@
 import base64
 from collections import defaultdict
 import json
+import glob
 import re
 import os
 import time
@@ -12,6 +13,7 @@ from .forms import SearchForm
 from .models import Book
 from . import download
 from . import extract_images
+from config import MYLIBTXT
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -87,6 +89,23 @@ def extract_progress():
     def generate():
         total = extract_images.unique()
         x = defaultdict(int)
+
+        download_size = 268645328
+
+        while not (started_download := glob.glob(MYLIBTXT + '*tmp')):
+            time.sleep(1)
+        tmpfile = started_download[-1]
+
+        while x["down"] < 100:
+            yield "data:" + json.dumps(x) + "\n\n"
+            try:
+                tmpsize = os.path.getsize(tmpfile)
+                x["down"] = round(100 * tmpsize / download_size)
+            except FileNotFoundError: # removed after completed download
+                x["down"] = 100
+            time.sleep(1)
+
+
         while x["ext"] < 100:
             n = len(list(os.scandir('vahtras/img')))
             x["ext"] = round(100*n/total)
@@ -96,8 +115,9 @@ def extract_progress():
             time.sleep(1)
 
         while x["imp"] < 100:
-            x["imp"] = round(100*Book.count/len(Book.objects))
+            x["imp"] = round(100*Book.count/len(Book.objects()))
             yield "data:" + json.dumps(x) + "\n\n"
-            time.sleep(.1)
+            time.sleep(1)
+
 
     return flask.Response(generate(), mimetype="text/event-stream")

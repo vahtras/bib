@@ -11,10 +11,10 @@ class DownloadThread(threading.Thread):
 
 
 def main():
-    quickstart.main()
-    extract_images.extract_images_to_file()
     Book.drop_collection()
     bib = Bib(MYLIB)
+    quickstart.main()
+    extract_images.extract_images_to_file()
     bib.save_books(
         bib.import_sql(f'{MYLIB}/My Library/mylibrary.db')
     )
