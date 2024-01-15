@@ -7,6 +7,8 @@ import mongoengine
 
 from config import Config
 
+import file_and_stream
+
 dotenv.load_dotenv()
 dbname = os.environ.get('MYLIB')
 mongoengine.register_connection(alias='default', name=dbname)

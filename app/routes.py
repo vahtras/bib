@@ -62,6 +62,7 @@ def index():
 @app.route('/start')
 def start():
     print(flask.request.args)
+    app.logger.info("Args %s", flask.request.args)
     filters = {k: v for k, v in flask.request.args.items() if k in ['hylla', 'title']}
     if 'last' in flask.request.args:
         filters['authors__0__last'] = flask.request.args['last']
