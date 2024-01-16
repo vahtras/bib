@@ -47,5 +47,4 @@ def unique():
     )
 
 if __name__ == "__main__":
-    breakpoint()
     extract_images_to_file()
