@@ -11,8 +11,6 @@ def main():
         dbname = os.environ.get('MYLIB')
     bib = Bib(dbname)
 
-    print("Welcome to my bibliography")
-
     menu = """
     Commands:
         add [a]

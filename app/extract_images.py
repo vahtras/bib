@@ -2,7 +2,6 @@ import base64
 import json
 import os
 import shutil
-import time
 
 from tqdm import tqdm
 import sqlite3
@@ -48,4 +47,5 @@ def unique():
     )
 
 if __name__ == "__main__":
-     extract()
+    breakpoint()
+    extract_images_to_file()
