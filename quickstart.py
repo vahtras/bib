@@ -11,7 +11,7 @@ import gdown
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/drive.metadata.readonly"]
 # MYLIB = os.environ["MYLIB"]
-MYLIB = '/tmp'
+MYLIB = "/tmp"
 
 
 def main():
@@ -41,7 +41,7 @@ def main():
         # Call the Drive v3 API
         results = (
             service.files()
-            .list(pageSize=10, fields="nextPageToken, files(id, name)")
+            .list(pageSize=10, fields="nextPageToken, files(id, name, size)")
             .execute()
         )
         items = results.get("files", [])
