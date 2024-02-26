@@ -4,6 +4,9 @@ mylib := env_var('MYLIB')
 default:
     @just --list
 
+check:
+    python -c 'import json; exp=json.load(open("token.json"))["expiry"]; print(exp)'
+
 list:
     python -c "from app.models import Bib; Bib('vahtras').list_books()"
 
