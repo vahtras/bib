@@ -51,6 +51,8 @@ def main():
             return items
         print("Files:")
         outdir = pathlib.Path(MYLIB) / "My Library"
+        if not outdir.is_dir():
+            outdir.mkdir()
         for item in items:
             if item["name"] in ["mylibrary.db", "MyLibraryImages.txt"]:
                 print(f"{item['name']} ({item['id']})")
